@@ -1,16 +1,27 @@
-import { Button } from "@/components/ui/button";
+import { AiPreviewSection } from "@/components/landing/ai-preview-section";
+import { CtaSection } from "@/components/landing/cta-section";
+import { FeaturesSection } from "@/components/landing/features-section";
+import { HeroSection } from "@/components/landing/hero-section";
+import { LandingFooter } from "@/components/landing/landing-footer";
+import { LandingNavbar } from "@/components/landing/landing-navbar";
+import { NotesPreviewSection } from "@/components/landing/notes-preview-section";
+import { ProductPreview } from "@/components/landing/product-preview";
+import { WhyNotivaSection } from "@/components/landing/why-notiva-section";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-6 text-foreground">
-      <section className="w-full max-w-lg rounded-xl border bg-card p-8 shadow-sm">
-        <p className="text-sm font-medium text-primary">Notiva</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Frontend foundation is ready.</h1>
-        <p className="mt-3 text-muted-foreground">
-          The project foundation is set up and ready for the next approved phase.
-        </p>
-        <Button className="mt-6">Foundation verified</Button>
-      </section>
-    </main>
+    <div className="min-h-screen bg-background text-foreground">
+      <LandingNavbar />
+      <main>
+        <HeroSection />
+        <ProductPreview />
+        <FeaturesSection />
+        <AiPreviewSection />
+        <NotesPreviewSection />
+        <WhyNotivaSection />
+        <CtaSection />
+      </main>
+      <LandingFooter />
+    </div>
   );
 }

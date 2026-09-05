@@ -1,6 +1,6 @@
 # Notiva Frontend
 
-The Next.js frontend for Notiva, a focused note-taking and AI-assisted productivity application. This repository currently contains the Phase 1 project foundation only.
+The Next.js frontend for Notiva, a focused note-taking and AI-assisted productivity application. The project currently includes its foundation, reusable design system, API client architecture, public landing page, and core authentication flow.
 
 ## Tech stack
 

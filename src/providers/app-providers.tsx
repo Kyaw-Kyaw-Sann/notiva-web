@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/features/auth/components/auth-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 
@@ -14,7 +15,7 @@ export function AppProviders({ children }: AppProvidersProps) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <QueryProvider>
-        {children}
+        <AuthProvider>{children}</AuthProvider>
         <Toaster />
       </QueryProvider>
     </ThemeProvider>
