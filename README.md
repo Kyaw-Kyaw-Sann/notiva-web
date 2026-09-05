@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Notiva Frontend
 
-## Getting Started
+The Next.js frontend for Notiva, a focused note-taking and AI-assisted productivity application. This repository currently contains the Phase 1 project foundation only.
 
-First, run the development server:
+## Tech stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Next.js (App Router) and TypeScript
+- Tailwind CSS and shadcn/ui
+- TanStack Query
+- React Hook Form, Zod, and `@hookform/resolvers`
+- Axios
+- Tiptap
+- Lucide React
+- next-themes
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Requirements
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Node.js 20.9 or later
+- npm
+- Notiva Spring Boot backend running at [http://localhost:8080](http://localhost:8080)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Getting started
 
-## Learn More
+1. Install dependencies:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Copy `.env.example` to `.env.local` and confirm the API base URL.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Start the frontend:
 
-## Deploy on Vercel
+   ```bash
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Open [http://localhost:3000](http://localhost:3000).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Environment variables
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `NEXT_PUBLIC_API_BASE_URL` | Yes | Base URL of the Notiva backend. Use `http://localhost:8080` in local development. |
+
+`.env.local` is intentionally ignored by Git. Do not put secrets, including AI provider keys, in browser-visible environment variables.
+
+## Available scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the development server. |
+| `npm run lint` | Run ESLint. |
+| `npm run build` | Create a production build. |
+| `npm run start` | Run the production server after building. |
+
+## Backend requirement
+
+Run the Notiva Spring Boot API at [http://localhost:8080](http://localhost:8080) before implementing API-backed phases. The frontend reads this endpoint from `NEXT_PUBLIC_API_BASE_URL`.
