@@ -73,23 +73,24 @@ The agreed frontend development phases are:
 1. **Phase 1 — Project Foundation**
 2. **Phase 2 — Design System**
 3. **Phase 3 — API Client Architecture**
-4. **Phase 4 — Core Authentication**
-5. **Phase 5 — Refresh Token & Session Reliability**
-6. **Phase 6 — Account Recovery & Email Verification**
-7. **Phase 7 — Main App Shell**
-8. **Phase 8 — Responsive Navigation**
-9. **Phase 9 — Notes Dashboard**
-10. **Phase 10 — Search, Filter, Sort & Pagination**
-11. **Phase 11 — Categories**
-12. **Phase 12 — Note CRUD**
-13. **Phase 13 — Rich Text Editor**
-14. **Phase 14 — Autosave & Editor UX**
-15. **Phase 15 — Recycle Bin & Version History**
-16. **Phase 16 — Note Images**
-17. **Phase 17 — AI Writing Assistant**
-18. **Phase 18 — AI Conversations & Semantic Search**
-19. **Phase 19 — Profile, Settings & Admin**
-20. **Phase 20 — Production Readiness, Testing & Deployment**
+4. **Phase 4 — Public Landing Page**
+5. **Phase 5 — Core Authentication**
+6. **Phase 6 — Refresh Token & Session Reliability**
+7. **Phase 7 — Account Recovery & Email Verification**
+8. **Phase 8 — Main App Shell**
+9. **Phase 9 — Responsive Navigation**
+10. **Phase 10 — Notes Dashboard**
+11. **Phase 11 — Search, Filter, Sort & Pagination**
+12. **Phase 12 — Categories**
+13. **Phase 13 — Note CRUD**
+14. **Phase 14 — Rich Text Editor**
+15. **Phase 15 — Autosave & Editor UX**
+16. **Phase 16 — Recycle Bin & Version History**
+17. **Phase 17 — Note Images**
+18. **Phase 18 — AI Writing Assistant**
+19. **Phase 19 — AI Conversations & Semantic Search**
+20. **Phase 20 — Profile, Settings & Admin**
+21. **Phase 21 — Production Readiness, Testing & Deployment**
 
 ### Phase discipline
 
