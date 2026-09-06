@@ -8,11 +8,12 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useDeleteNote, useSetNoteFavorite, useSetNotePinned } from "@/features/notes/hooks/use-notes";
+import { VersionHistoryDialog } from "@/features/notes/components/versions/version-history-dialog";
 import type { Note } from "@/features/notes/types/note.types";
 import { normalizeApiError } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
-export function NoteActions({ note }: { note: Note }) {
+export function NoteActions({ note, onVersionRestored, versionHistoryDisabled }: { note: Note; onVersionRestored?: (note: Note) => void; versionHistoryDisabled?: boolean }) {
   const router = useRouter();
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -52,6 +53,7 @@ export function NoteActions({ note }: { note: Note }) {
   return (
     <>
       <div className="flex items-center gap-1" aria-label="Note actions">
+        <VersionHistoryDialog noteId={note.id} disabled={versionHistoryDisabled} onRestored={onVersionRestored} />
         <Button
           type="button"
           variant="ghost"

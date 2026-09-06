@@ -1,5 +1,5 @@
 import { get, patch, post, put, remove } from "@/lib/api";
-import type { Note, NotePayload, NotesPage, NotesSearchFilters } from "@/features/notes/types/note.types";
+import type { Note, NotePayload, NotesPage, NotesSearchFilters, NoteVersion, NoteVersionSummary } from "@/features/notes/types/note.types";
 
 export function createNote(payload: NotePayload) {
   return post<Note, NotePayload>("/api/notes", payload);
@@ -47,6 +47,34 @@ export function getFavoriteNotes() {
 
 export function getTrashedNotes() {
   return get<Note[]>("/api/notes/trash");
+}
+
+export function getTrashedNote(noteId: number) {
+  return get<Note>(`/api/notes/trash/${noteId}`);
+}
+
+export function restoreNote(noteId: number) {
+  return patch<Note>(`/api/notes/${noteId}/restore`);
+}
+
+export function permanentlyDeleteNote(noteId: number) {
+  return remove<null>(`/api/notes/${noteId}/permanent`);
+}
+
+export function emptyTrash() {
+  return remove<number>("/api/notes/trash");
+}
+
+export function getNoteVersions(noteId: number) {
+  return get<NoteVersionSummary[]>(`/api/notes/${noteId}/versions`);
+}
+
+export function getNoteVersion(noteId: number, versionId: number) {
+  return get<NoteVersion>(`/api/notes/${noteId}/versions/${versionId}`);
+}
+
+export function restoreNoteVersion(noteId: number, versionId: number) {
+  return post<Note>(`/api/notes/${noteId}/versions/${versionId}/restore`);
 }
 
 export function searchNotes(filters: NotesSearchFilters) {

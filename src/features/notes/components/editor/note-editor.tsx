@@ -21,9 +21,10 @@ type NoteEditorProps = {
   fallbackPlainText: string;
   onChange: (value: EditorValue) => void;
   onReadyPlainText: (plainText: string) => void;
+  showToolbar?: boolean;
 };
 
-export function NoteEditor({ contentJson, disabled, fallbackPlainText, onChange, onReadyPlainText }: NoteEditorProps) {
+export function NoteEditor({ contentJson, disabled, fallbackPlainText, onChange, onReadyPlainText, showToolbar = true }: NoteEditorProps) {
   const initialContent = getEditorContent(contentJson, fallbackPlainText).content;
   const editor = useEditor({
     extensions: [
@@ -67,7 +68,7 @@ export function NoteEditor({ contentJson, disabled, fallbackPlainText, onChange,
 
   return (
     <div className="bg-background/20 focus-within:bg-background/35">
-      <EditorToolbar editor={editor} />
+      {showToolbar && <EditorToolbar editor={editor} />}
       <EditorContent editor={editor} />
     </div>
   );

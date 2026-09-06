@@ -50,6 +50,7 @@ function getDefaultValues(note?: Note): NoteFormValues {
 export function NoteForm({ note }: { note?: Note }) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [editorRevision, setEditorRevision] = useState(0);
   const { data: categories = [], isLoading: categoriesLoading } = useCategories();
   const createNote = useCreateNote();
   const form = useForm<NoteFormValues>({
@@ -70,6 +71,10 @@ export function NoteForm({ note }: { note?: Note }) {
   }), [backgroundColor, categoryId, contentJson, plainText, title]);
   const handleAutosaveSuccess = useCallback((payload: NotePayload) => {
     form.reset(payload);
+  }, [form]);
+  const handleVersionRestored = useCallback((restoredNote: Note) => {
+    form.reset(getDefaultValues(restoredNote));
+    setEditorRevision((revision) => revision + 1);
   }, [form]);
   const autosave = useNoteAutosave({
     enabled: Boolean(note) && form.formState.isValid,
@@ -124,7 +129,7 @@ export function NoteForm({ note }: { note?: Note }) {
           <Link href="/notes"><ArrowLeft aria-hidden="true" />Back to all notes</Link>
         </Button>
         <div className="flex flex-wrap items-center gap-2 sm:justify-end">
-          {note && <NoteActions note={note} />}
+          {note && <NoteActions note={note} onVersionRestored={handleVersionRestored} versionHistoryDisabled={hasUnsavedChanges} />}
           {note ? (
             <SaveStatus error={autosave.error} hasUnsavedChanges={hasUnsavedChanges} onRetry={() => void autosave.saveNow()} status={autosave.status} />
           ) : (
@@ -174,6 +179,7 @@ export function NoteForm({ note }: { note?: Note }) {
         </div>
 
         <NoteEditor
+          key={editorRevision}
           contentJson={contentJson ?? ""}
           fallbackPlainText={plainText ?? ""}
           disabled={isCreating}

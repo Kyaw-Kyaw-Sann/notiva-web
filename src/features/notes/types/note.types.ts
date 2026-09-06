@@ -52,3 +52,16 @@ export type NotesPage = {
   totalElements: number;
   totalPages: number;
 };
+
+export type NoteVersionSummary = {
+  id: number;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type NoteVersion = NoteVersionSummary & {
+  contentJson: string;
+  plainText: string;
+  backgroundColor: NoteBackgroundColor;
+};
