@@ -3,17 +3,14 @@
 import { useEffect } from "react";
 
 import { AppSidebar } from "@/components/layout/app-sidebar";
-import type { NavigationLabel } from "@/components/layout/app-sidebar-nav";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 
 type MobileSidebarProps = {
-  activeItem: NavigationLabel;
-  onActiveItemChange: (item: NavigationLabel) => void;
   onOpenChange: (open: boolean) => void;
   open: boolean;
 };
 
-export function MobileSidebar({ activeItem, onActiveItemChange, onOpenChange, open }: MobileSidebarProps) {
+export function MobileSidebar({ onOpenChange, open }: MobileSidebarProps) {
   useEffect(() => {
     const desktopQuery = window.matchMedia("(min-width: 1024px)");
 
@@ -37,10 +34,8 @@ export function MobileSidebar({ activeItem, onActiveItemChange, onOpenChange, op
         <DialogTitle className="sr-only">Workspace navigation</DialogTitle>
         <DialogDescription className="sr-only">Navigate your Notiva workspace and manage account display settings.</DialogDescription>
         <AppSidebar
-          activeItem={activeItem}
           collapsed={false}
           mobile
-          onActiveItemChange={onActiveItemChange}
           onNavigate={() => onOpenChange(false)}
           onToggleCollapsed={() => undefined}
         />

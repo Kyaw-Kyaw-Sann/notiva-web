@@ -30,7 +30,7 @@ export function LoginForm() {
 
     try {
       await signIn(values);
-      router.replace("/protected");
+      router.replace("/notes");
     } catch (error) {
       const apiError = normalizeApiError(error);
       const fieldErrors = apiError.validationErrors;
