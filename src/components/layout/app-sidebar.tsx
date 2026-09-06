@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronsLeft, ChevronsRight, FilePlus } from "lucide-react";
+import Link from "next/link";
 
 import { NotivaBrand } from "@/components/landing/notiva-brand";
 import { Button } from "@/components/ui/button";
@@ -39,9 +40,11 @@ export function AppSidebar({ collapsed, mobile = false, onNavigate, onToggleColl
       </div>
 
       <div className="px-3 py-4">
-        <Button className={cn("w-full shadow-none disabled:opacity-100", collapsed && "px-0")} disabled title="New notes will be available in Phase 13">
-          <FilePlus aria-hidden="true" />
-          {!collapsed && <span>New Note</span>}
+        <Button asChild className={cn("w-full shadow-none", collapsed && "px-0")} title="Create a new note">
+          <Link href="/notes/new" onClick={onNavigate}>
+            <FilePlus aria-hidden="true" />
+            {!collapsed && <span>New Note</span>}
+          </Link>
         </Button>
       </div>
 

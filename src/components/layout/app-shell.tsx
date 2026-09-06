@@ -30,7 +30,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           sidebarVisible={sidebarVisible}
           onToggleSidebar={() => setSidebarVisible((visible) => !visible)}
         />
-        <main className="min-h-0 min-w-0 flex-1 overflow-y-auto px-4 py-8 sm:px-6 lg:px-10">{children}</main>
+        <main className="notiva-scrollbar min-h-0 min-w-0 flex-1 overflow-y-auto px-4 py-8 sm:px-6 lg:px-10">{children}</main>
       </div>
     </div>
   );

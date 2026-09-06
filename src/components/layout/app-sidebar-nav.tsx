@@ -4,6 +4,7 @@ import { Archive, BotMessageSquare, Inbox, Pin, Star } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
+import { CategoryList } from "@/features/categories/components/category-list";
 import { cn } from "@/lib/utils";
 
 type NavigationItem = {
@@ -34,7 +35,13 @@ export function AppSidebarNav({ collapsed, onNavigate }: AppSidebarNavProps) {
       <nav className="space-y-1" aria-label="Workspace navigation">
         {navigationItems.map(({ href, label, icon: Icon }) => {
           const isActive = href === "/notes"
-            ? pathname === "/notes" && !searchParams.get("pinned") && !searchParams.get("favorite")
+            ? (pathname.startsWith("/notes/") || (
+              pathname === "/notes"
+              && !searchParams.get("pinned")
+              && !searchParams.get("favorite")
+              && !searchParams.get("categoryId")
+              && !searchParams.get("uncategorized")
+            ))
             : href === "/notes?pinned=true"
               ? pathname === "/notes" && searchParams.get("pinned") === "true" && searchParams.get("favorite") !== "true"
               : href === "/notes?favorite=true"
@@ -66,13 +73,7 @@ export function AppSidebarNav({ collapsed, onNavigate }: AppSidebarNavProps) {
       </nav>
 
       <section className="mt-6 flex min-h-0 flex-1 flex-col border-t pt-5" aria-labelledby="categories-heading">
-        <div className={cn("flex items-center justify-between px-3", collapsed && "justify-center px-0")}>
-          {!collapsed && <h2 id="categories-heading" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Categories</h2>}
-          {collapsed && <span className="sr-only" id="categories-heading">Categories</span>}
-        </div>
-        <div className="mt-3 min-h-0 flex-1 overflow-y-auto px-3 pb-3" aria-labelledby="categories-heading">
-          {!collapsed && <p className="text-xs leading-5 text-muted-foreground">Your categories will appear here in Phase 12.</p>}
-        </div>
+        <CategoryList collapsed={collapsed} onNavigate={onNavigate} />
       </section>
     </div>
   );

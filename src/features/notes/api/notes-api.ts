@@ -1,5 +1,37 @@
-import { get } from "@/lib/api";
-import type { Note, NoteCategory, NotesPage, NotesSearchFilters } from "@/features/notes/types/note.types";
+import { get, patch, post, put, remove } from "@/lib/api";
+import type { Note, NotePayload, NotesPage, NotesSearchFilters } from "@/features/notes/types/note.types";
+
+export function createNote(payload: NotePayload) {
+  return post<Note, NotePayload>("/api/notes", payload);
+}
+
+export function getNote(noteId: number) {
+  return get<Note>(`/api/notes/${noteId}`);
+}
+
+export function updateNote(noteId: number, payload: NotePayload) {
+  return put<Note, NotePayload>(`/api/notes/${noteId}`, payload);
+}
+
+export function deleteNote(noteId: number) {
+  return remove<null>(`/api/notes/${noteId}`);
+}
+
+export function pinNote(noteId: number) {
+  return patch<Note>(`/api/notes/${noteId}/pin`);
+}
+
+export function unpinNote(noteId: number) {
+  return patch<Note>(`/api/notes/${noteId}/unpin`);
+}
+
+export function favoriteNote(noteId: number) {
+  return patch<Note>(`/api/notes/${noteId}/favorite`);
+}
+
+export function unfavoriteNote(noteId: number) {
+  return patch<Note>(`/api/notes/${noteId}/unfavorite`);
+}
 
 export function getNotes() {
   return get<Note[]>("/api/notes");
@@ -31,8 +63,4 @@ export function searchNotes(filters: NotesSearchFilters) {
       size: filters.size,
     },
   });
-}
-
-export function getNoteCategories() {
-  return get<NoteCategory[]>("/api/categories");
 }
