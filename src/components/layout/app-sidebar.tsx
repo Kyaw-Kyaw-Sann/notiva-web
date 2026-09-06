@@ -7,18 +7,15 @@ import { Button } from "@/components/ui/button";
 import { AppSidebarNav } from "@/components/layout/app-sidebar-nav";
 import { AppUserMenu } from "@/components/layout/app-user-menu";
 import { cn } from "@/lib/utils";
-import type { NavigationLabel } from "@/components/layout/app-sidebar-nav";
 
 type AppSidebarProps = {
-  activeItem: NavigationLabel;
   collapsed: boolean;
   mobile?: boolean;
-  onActiveItemChange: (item: NavigationLabel) => void;
   onNavigate?: () => void;
   onToggleCollapsed: () => void;
 };
 
-export function AppSidebar({ activeItem, collapsed, mobile = false, onActiveItemChange, onNavigate, onToggleCollapsed }: AppSidebarProps) {
+export function AppSidebar({ collapsed, mobile = false, onNavigate, onToggleCollapsed }: AppSidebarProps) {
   return (
     <aside
       className={cn(
@@ -48,7 +45,7 @@ export function AppSidebar({ activeItem, collapsed, mobile = false, onActiveItem
         </Button>
       </div>
 
-      <AppSidebarNav activeItem={activeItem} collapsed={collapsed} onActiveItemChange={onActiveItemChange} onNavigate={onNavigate} />
+      <AppSidebarNav collapsed={collapsed} onNavigate={onNavigate} />
       <AppUserMenu collapsed={collapsed} />
     </aside>
   );

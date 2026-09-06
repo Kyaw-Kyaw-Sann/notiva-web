@@ -42,7 +42,7 @@ export default function OAuthCallbackPage() {
 
       try {
         await completeOAuth(accessToken);
-        router.replace("/protected");
+        router.replace("/notes");
       } catch (error) {
         setErrorMessage(normalizeApiError(error).message);
       }
