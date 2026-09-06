@@ -1,23 +1,13 @@
-"use client";
-
-import { ShieldCheck } from "lucide-react";
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/features/auth/hooks/use-auth";
-
 export default function ProtectedPage() {
-  const { user } = useAuth();
-
   return (
-    <main className="flex min-h-screen items-center justify-center px-4">
-      <Card className="w-full max-w-lg">
-        <CardHeader>
-          <ShieldCheck className="size-8 text-success" />
-          <CardTitle className="mt-2">Core authentication is ready</CardTitle>
-          <CardDescription>This temporary page verifies the protected-route boundary.</CardDescription>
-        </CardHeader>
-        <CardContent className="text-sm"><span className="text-muted-foreground">Signed in as </span><span className="font-medium">{user?.displayName}</span></CardContent>
-      </Card>
-    </main>
+    <section className="mx-auto flex min-h-[calc(100vh-8rem)] max-w-3xl items-center justify-center">
+      <div className="w-full rounded-2xl border bg-card p-8 text-center shadow-card sm:p-10">
+        <p className="text-sm font-medium text-primary">Notiva workspace</p>
+        <h2 className="mt-3 text-2xl font-semibold tracking-tight">Your workspace shell is ready.</h2>
+        <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-muted-foreground">
+          Notes, categories, and workspace tools will be added in their planned phases.
+        </p>
+      </div>
+    </section>
   );
 }
