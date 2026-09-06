@@ -1,6 +1,7 @@
 "use client";
 
-import { LogOut, Settings, Sun, Moon } from "lucide-react";
+import { LogOut, Settings, ShieldCheck, Sun, Moon } from "lucide-react";
+import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 
@@ -74,6 +75,11 @@ export function AppUserMenu({ collapsed }: AppUserMenuProps) {
             <span className="block truncate pt-0.5 text-xs font-normal">{user?.email}</span>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
+          {user?.role === "ADMIN" && (
+            <DropdownMenuItem asChild>
+              <Link href="/admin"><ShieldCheck aria-hidden="true" />Admin workspace</Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onSelect={() => setSettingsOpen(true)}>
             <Settings aria-hidden="true" />
             Settings
