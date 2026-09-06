@@ -26,6 +26,7 @@ import { getEditorContent } from "@/features/notes/utils/editor-content";
 import { formatNoteUpdatedAt } from "@/features/notes/utils/format-note-updated-at";
 import { normalizeApiError } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { useSettingsPreferences } from "@/features/settings/hooks/use-settings-preferences";
 
 const noteBackgroundClasses: Record<NoteBackgroundColor, string> = {
   DEFAULT: "bg-note-default",
@@ -56,6 +57,7 @@ export function NoteForm({ note }: { note?: Note }) {
   const [assistantPanel, setAssistantPanel] = useState<"writing" | "chat" | null>(null);
   const [editorSelection, setEditorSelection] = useState<NoteEditorSelection>({ from: 1, hasSelection: false, text: "", to: 1 });
   const editorRef = useRef<NoteEditorHandle>(null);
+  const { editorWidth } = useSettingsPreferences();
   const { data: categories = [], isLoading: categoriesLoading } = useCategories();
   const createNote = useCreateNote();
   const form = useForm<NoteFormValues>({
@@ -128,7 +130,7 @@ export function NoteForm({ note }: { note?: Note }) {
   const characterCount = plainText?.length ?? 0;
 
   return (
-    <form className={cn("mx-auto w-full", note && assistantPanel ? "max-w-[100rem]" : "max-w-6xl")} onSubmit={form.handleSubmit(onSubmit)} noValidate>
+    <form className={cn("mx-auto w-full", note && assistantPanel ? "max-w-[100rem]" : editorWidth === "wide" ? "max-w-[90rem]" : "max-w-6xl")} onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <div className="mb-5 flex flex-col gap-4 border-b pb-5 sm:flex-row sm:items-center sm:justify-between">
         <Button asChild variant="ghost" className="w-fit px-2 text-muted-foreground">
           <Link href="/notes"><ArrowLeft aria-hidden="true" />Back to all notes</Link>

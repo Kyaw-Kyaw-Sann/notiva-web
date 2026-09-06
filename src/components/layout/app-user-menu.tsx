@@ -2,6 +2,7 @@
 
 import { LogOut, Settings, Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/features/auth/hooks/use-auth";
+import { SettingsDialog } from "@/features/settings/components/settings-dialog";
 
 type AppUserMenuProps = {
   collapsed: boolean;
@@ -29,6 +31,7 @@ function getInitials(displayName: string) {
 }
 
 export function AppUserMenu({ collapsed }: AppUserMenuProps) {
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
   const { signOut, user } = useAuth();
   const displayName = user?.displayName ?? "Notiva user";
@@ -54,8 +57,8 @@ export function AppUserMenu({ collapsed }: AppUserMenuProps) {
             className="h-auto w-full justify-start rounded-lg px-2 py-2 hover:bg-surface"
             aria-label="Open account menu"
           >
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-secondary-foreground" aria-hidden="true">
-              {getInitials(displayName)}
+            <span className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-secondary bg-cover bg-center text-xs font-semibold text-secondary-foreground" style={user?.avatarUrl ? { backgroundImage: `url(${JSON.stringify(user.avatarUrl)})` } : undefined} aria-hidden="true">
+              {!user?.avatarUrl && getInitials(displayName)}
             </span>
             {!collapsed && (
               <span className="ml-3 min-w-0 text-left">
@@ -71,9 +74,9 @@ export function AppUserMenu({ collapsed }: AppUserMenuProps) {
             <span className="block truncate pt-0.5 text-xs font-normal">{user?.email}</span>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem disabled>
+          <DropdownMenuItem onSelect={() => setSettingsOpen(true)}>
             <Settings aria-hidden="true" />
-            Settings (coming later)
+            Settings
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={() => void signOut()}>
@@ -82,6 +85,7 @@ export function AppUserMenu({ collapsed }: AppUserMenuProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>
   );
 }
