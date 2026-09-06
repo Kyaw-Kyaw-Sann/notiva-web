@@ -22,6 +22,19 @@ export type RegisterInput = {
   password: string;
 };
 
+export type ForgotPasswordInput = {
+  email: string;
+};
+
+export type VerifyResetOtpInput = {
+  email: string;
+  otp: string;
+};
+
+export type ResetPasswordInput = VerifyResetOtpInput & {
+  newPassword: string;
+};
+
 export type LoginResponse = {
   accessToken: string;
   refreshToken: string;

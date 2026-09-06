@@ -16,6 +16,7 @@ import { normalizeApiError } from "@/lib/api";
 export function RegisterForm() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [registeredEmail, setRegisteredEmail] = useState<string | null>(null);
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: { displayName: "", email: "", password: "", confirmPassword: "" },
@@ -32,6 +33,7 @@ export function RegisterForm() {
         password: values.password,
       });
       setSuccessMessage(response.message);
+      setRegisteredEmail(values.email);
       form.reset();
     } catch (error) {
       const apiError = normalizeApiError(error);
@@ -52,6 +54,10 @@ export function RegisterForm() {
         </span>
         <h2 className="mt-4 text-lg font-semibold">Check your inbox</h2>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">{successMessage}</p>
+        {registeredEmail && <p className="mt-2 break-all text-sm font-medium text-foreground">{registeredEmail}</p>}
+        <p className="mt-3 text-xs leading-5 text-muted-foreground">
+          Open the verification link before signing in. If you cannot find the email, check your spam folder.
+        </p>
         <Button asChild className="mt-5 h-11 w-full">
           <Link href="/login">Continue to sign in</Link>
         </Button>
