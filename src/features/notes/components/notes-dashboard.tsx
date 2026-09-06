@@ -2,7 +2,7 @@
 
 import { LayoutGrid, List, NotebookText, Plus } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { EmptyState } from "@/components/common/empty-state";
@@ -22,6 +22,7 @@ import { useNotes } from "@/features/notes/hooks/use-notes";
 import type { NotesSearchFilters, NotesView } from "@/features/notes/types/note.types";
 import { getNotesSearchFilters, setNotesSearchFilter } from "@/features/notes/utils/notes-search-params";
 import { normalizeApiError } from "@/lib/api";
+import { useSettingsPreferences } from "@/features/settings/hooks/use-settings-preferences";
 
 type NotesDashboardProps = {
   view: NotesView;
@@ -35,7 +36,7 @@ const viewContent: Record<NotesView, { emptyDescription: string; emptyTitle: str
 };
 
 export function NotesDashboard({ view }: NotesDashboardProps) {
-  const [layout, setLayout] = useState<"grid" | "list">("grid");
+  const { notesLayout: layout, setNotesLayout: setLayout } = useSettingsPreferences();
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();

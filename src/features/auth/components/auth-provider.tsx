@@ -18,6 +18,7 @@ type AuthContextValue = {
   signOut: () => Promise<void>;
   completeOAuth: (accessToken: string) => Promise<void>;
   clearSession: () => void;
+  updateUser: (user: AuthUser) => void;
 };
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -45,6 +46,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null);
     setStatus("unauthenticated");
   }, []);
+
+  const updateUser = useCallback((user: AuthUser) => {
+    const currentSession = sessionRef.current ?? readAuthSession();
+
+    if (!currentSession) return;
+
+    establishSession({ ...currentSession, user });
+  }, [establishSession]);
 
   const redirectToLogin = useCallback(() => {
     clearSession();
@@ -176,8 +185,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const value = useMemo<AuthContextValue>(
-    () => ({ session, user: session?.user ?? null, status, signIn, signOut, completeOAuth, clearSession }),
-    [clearSession, completeOAuth, session, signIn, signOut, status],
+    () => ({ session, user: session?.user ?? null, status, signIn, signOut, completeOAuth, clearSession, updateUser }),
+    [clearSession, completeOAuth, session, signIn, signOut, status, updateUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
