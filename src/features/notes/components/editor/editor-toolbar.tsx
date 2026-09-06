@@ -7,13 +7,26 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { LinkDialog } from "@/features/notes/components/editor/link-dialog";
+import { ImageUpload, RemoveImageButton } from "@/features/notes/components/editor/image-upload";
 import { ToolbarButton } from "@/features/notes/components/editor/toolbar-button";
+import type { AppApiError } from "@/lib/api";
 
 function ToolbarSeparator() {
   return <span className="mx-1 h-6 w-px shrink-0 bg-border" aria-hidden="true" />;
 }
 
-export function EditorToolbar({ editor }: { editor: Editor }) {
+type EditorToolbarProps = {
+  editor: Editor;
+  imageUpload: {
+    error: AppApiError | null;
+    isUploading: boolean;
+    onFiles: (files: File[]) => void;
+    onRetry: () => void;
+    progress: number | null;
+  };
+};
+
+export function EditorToolbar({ editor, imageUpload }: EditorToolbarProps) {
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const currentHeading = ([1, 2, 3] as const).find((level) => editor.isActive("heading", { level }));
 
@@ -57,6 +70,8 @@ export function EditorToolbar({ editor }: { editor: Editor }) {
         <ToolbarButton label="Block quote" isActive={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote /></ToolbarButton>
         <ToolbarButton label="Horizontal divider" onClick={() => editor.chain().focus().setHorizontalRule().run()}><Minus /></ToolbarButton>
         <ToolbarButton label={editor.isActive("link") ? "Edit link" : "Add link"} isActive={editor.isActive("link")} onClick={() => setLinkDialogOpen(true)}><Link2 /></ToolbarButton>
+        <ImageUpload {...imageUpload} disabled={!editor.isEditable} />
+        {editor.isActive("image") && <RemoveImageButton disabled={!editor.isEditable} onRemove={() => editor.chain().focus().deleteSelection().run()} />}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button type="button" variant={editor.isActive("table") ? "secondary" : "ghost"} size="icon" className="size-9 shrink-0" aria-label="Table actions" title="Table actions"><Table2 /></Button>

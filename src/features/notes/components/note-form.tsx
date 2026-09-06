@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, LoaderCircle, MessageCircle, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -53,7 +53,9 @@ function getDefaultValues(note?: Note): NoteFormValues {
 export function NoteForm({ note }: { note?: Note }) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [createdNoteId, setCreatedNoteId] = useState<number | null>(null);
   const [editorRevision, setEditorRevision] = useState(0);
+  const [savedContentJson, setSavedContentJson] = useState(() => note?.contentJson ?? "");
   const [assistantPanel, setAssistantPanel] = useState<"writing" | "chat" | null>(null);
   const [editorSelection, setEditorSelection] = useState<NoteEditorSelection>({ from: 1, hasSelection: false, text: "", to: 1 });
   const editorRef = useRef<NoteEditorHandle>(null);
@@ -77,9 +79,11 @@ export function NoteForm({ note }: { note?: Note }) {
     backgroundColor: backgroundColor ?? "DEFAULT",
   }), [backgroundColor, categoryId, contentJson, plainText, title]);
   const handleAutosaveSuccess = useCallback((payload: NotePayload) => {
+    setSavedContentJson(payload.contentJson);
     form.reset(payload);
   }, [form]);
   const handleVersionRestored = useCallback((restoredNote: Note) => {
+    setSavedContentJson(restoredNote.contentJson);
     form.reset(getDefaultValues(restoredNote));
     setEditorRevision((revision) => revision + 1);
   }, [form]);
@@ -91,8 +95,15 @@ export function NoteForm({ note }: { note?: Note }) {
     payload: autosavePayload,
   });
   const isCreating = createNote.isPending;
-  const hasUnsavedChanges = Boolean(note) && (form.formState.isDirty || autosave.status === "saving");
+  const hasUnsavedChanges = form.formState.isDirty || (Boolean(note) && autosave.status === "saving");
   useUnsavedChangesWarning(hasUnsavedChanges);
+
+  useEffect(() => {
+    if (createdNoteId === null) return;
+
+    const frame = window.requestAnimationFrame(() => router.replace(`/notes/${createdNoteId}`));
+    return () => window.cancelAnimationFrame(frame);
+  }, [createdNoteId, router]);
 
   async function onSubmit(values: NoteFormValues) {
     setSubmitError(null);
@@ -104,9 +115,15 @@ export function NoteForm({ note }: { note?: Note }) {
 
     try {
       const savedNote = await createNote.mutateAsync(values);
-      form.reset(getDefaultValues(savedNote));
+      handleAutosaveSuccess({
+        title: savedNote.title,
+        contentJson: savedNote.contentJson,
+        plainText: savedNote.plainText,
+        categoryId: savedNote.category?.id ?? null,
+        backgroundColor: savedNote.backgroundColor,
+      });
+      setCreatedNoteId(savedNote.id);
       toast.success("Note created");
-      router.replace(`/notes/${savedNote.id}`);
     } catch (error) {
       const apiError = normalizeApiError(error);
       const fieldErrors = apiError.validationErrors;
@@ -196,6 +213,7 @@ export function NoteForm({ note }: { note?: Note }) {
           disabled={isCreating}
           onReadyPlainText={(editorPlainText) => form.setValue("plainText", editorPlainText, { shouldDirty: false })}
           onSelectionChange={setEditorSelection}
+          savedContentJson={savedContentJson}
           onChange={({ contentJson: nextContentJson, plainText: nextPlainText }) => {
             form.setValue("contentJson", nextContentJson, { shouldDirty: true, shouldValidate: true });
             form.setValue("plainText", nextPlainText, { shouldDirty: true, shouldValidate: true });
