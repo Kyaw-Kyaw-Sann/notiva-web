@@ -30,6 +30,17 @@ export type LoginResponse = {
   user: AuthUser;
 };
 
+export type RefreshTokenInput = {
+  refreshToken: string;
+};
+
+export type RefreshResponse = {
+  accessToken: string;
+  refreshToken: string;
+  tokenType: "Bearer";
+  expiresIn: number;
+};
+
 export type RegisterResponse = {
   id: number;
   email: string;
