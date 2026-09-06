@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AuthFormPanel } from "@/features/auth/components/auth-form-panel";
+import { AuthLayout } from "@/features/auth/components/auth-layout";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { normalizeApiError } from "@/lib/api";
 
@@ -51,15 +52,33 @@ export default function OAuthCallbackPage() {
   }, [completeOAuth, router]);
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4">
-      <Card className="w-full max-w-md text-center">
-        <CardHeader className="items-center">
-          {errorMessage ? <AlertCircle className="size-8 text-destructive" /> : <LoaderCircle className="size-8 animate-spin text-primary" />}
-          <CardTitle className="mt-2">{errorMessage ? "Could not sign you in" : "Completing sign in"}</CardTitle>
-          <CardDescription>{errorMessage ?? "Securely loading your Notiva account…"}</CardDescription>
-        </CardHeader>
-        {errorMessage && <CardContent><Button asChild className="w-full"><Link href="/login">Back to login</Link></Button></CardContent>}
-      </Card>
-    </main>
+    <AuthLayout>
+      <AuthFormPanel
+        eyebrow={errorMessage ? "Sign-in interrupted" : "Secure sign-in"}
+        title={errorMessage ? "Could not sign you in" : "Completing your sign in"}
+        description={errorMessage ?? "We’re securely loading your Notiva workspace."}
+      >
+        <div className="rounded-xl border bg-surface p-5 text-center shadow-card" aria-live="polite">
+          {errorMessage ? (
+            <>
+              <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+                <AlertCircle className="size-6" aria-hidden="true" />
+              </span>
+              <p className="mt-4 text-sm text-muted-foreground">Your account has not been changed.</p>
+              <Button asChild className="mt-5 h-11 w-full">
+                <Link href="/login">Back to sign in</Link>
+              </Button>
+            </>
+          ) : (
+            <>
+              <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-accent text-primary">
+                <LoaderCircle className="size-6 animate-spin" aria-hidden="true" />
+              </span>
+              <p className="mt-4 text-sm text-muted-foreground">This will only take a moment.</p>
+            </>
+          )}
+        </div>
+      </AuthFormPanel>
+    </AuthLayout>
   );
 }

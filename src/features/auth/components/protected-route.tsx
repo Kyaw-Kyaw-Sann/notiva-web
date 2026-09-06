@@ -1,33 +1,61 @@
 "use client";
 
-import { LockKeyhole } from "lucide-react";
+import { ArrowRight, LockKeyhole } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { LoadingState } from "@/components/common/loading-state";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AuthFormPanel } from "@/features/auth/components/auth-form-panel";
+import { AuthLayout } from "@/features/auth/components/auth-layout";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
   const { status } = useAuth();
 
   if (status === "loading") {
-    return <div className="mx-auto w-full max-w-md p-6"><LoadingState rows={3} /></div>;
+    return (
+      <AuthLayout>
+        <AuthFormPanel eyebrow="Restoring your session" title="Opening your workspace" description="We’re securely checking your Notiva session.">
+          <div className="space-y-3" aria-label="Loading your account" aria-busy="true">
+            <Skeleton className="h-11 w-full" />
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-11 w-2/3" />
+          </div>
+        </AuthFormPanel>
+      </AuthLayout>
+    );
   }
 
   if (status === "unauthenticated") {
     return (
-      <div className="flex min-h-screen items-center justify-center px-4">
-        <Card className="w-full max-w-md text-center">
-          <CardHeader className="items-center">
-            <div className="flex size-11 items-center justify-center rounded-full bg-accent text-accent-foreground"><LockKeyhole className="size-5" /></div>
-            <CardTitle className="mt-3">Authentication required</CardTitle>
-            <CardDescription>Sign in to access this protected area.</CardDescription>
-          </CardHeader>
-          <CardContent><Button asChild className="w-full"><Link href="/login">Go to login</Link></Button></CardContent>
-        </Card>
-      </div>
+      <AuthLayout>
+        <AuthFormPanel
+          eyebrow="Protected workspace"
+          title="Sign in to continue"
+          description="Your notes and account are protected. Sign in to open your personal workspace."
+          footer={
+            <Link className="rounded-sm font-medium text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring" href="/">
+              Return to the Notiva homepage
+            </Link>
+          }
+        >
+          <div className="rounded-xl border bg-surface p-5 shadow-card">
+            <span className="flex size-11 items-center justify-center rounded-full bg-accent text-accent-foreground">
+              <LockKeyhole className="size-5" aria-hidden="true" />
+            </span>
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">
+              Sign in with your account to safely access this area.
+            </p>
+            <Button asChild className="mt-5 h-11 w-full">
+              <Link href="/login">
+                Go to sign in
+                <ArrowRight aria-hidden="true" />
+              </Link>
+            </Button>
+          </div>
+        </AuthFormPanel>
+      </AuthLayout>
     );
   }
 
