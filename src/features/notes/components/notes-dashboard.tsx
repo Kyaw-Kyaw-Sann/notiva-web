@@ -15,6 +15,8 @@ import { NotesList } from "@/features/notes/components/notes-list";
 import { NotesPagination } from "@/features/notes/components/notes-pagination";
 import { NotesSearch } from "@/features/notes/components/notes-search";
 import { NotesSort } from "@/features/notes/components/notes-sort";
+import { EmptyTrashDialog } from "@/features/notes/components/trash/empty-trash-dialog";
+import { TrashNotes } from "@/features/notes/components/trash/trash-notes";
 import { useCategories } from "@/features/categories/hooks/use-categories";
 import { useNotes } from "@/features/notes/hooks/use-notes";
 import type { NotesSearchFilters, NotesView } from "@/features/notes/types/note.types";
@@ -81,6 +83,7 @@ export function NotesDashboard({ view }: NotesDashboardProps) {
               </div>
             </>
           )}
+          {view === "trash" && <EmptyTrashDialog disabled={!notesPage || notesPage.totalElements === 0 || isLoading || isError} />}
           <div className="inline-flex w-fit rounded-lg border bg-surface p-1" role="group" aria-label="Notes layout">
             <Button variant={layout === "grid" ? "secondary" : "ghost"} size="icon" onClick={() => setLayout("grid")} aria-label="Grid view" aria-pressed={layout === "grid"}>
               <LayoutGrid aria-hidden="true" />
@@ -106,7 +109,11 @@ export function NotesDashboard({ view }: NotesDashboardProps) {
       {!isLoading && !isError && notesPage?.content.length === 0 && <EmptyState icon={NotebookText} title={hasSearchFilters ? "No matching notes" : content.emptyTitle} description={hasSearchFilters ? "Try changing or clearing one of your search filters." : content.emptyDescription} />}
       {!isLoading && !isError && notesPage && notesPage.content.length > 0 && (
         <>
-          {layout === "grid" ? <NotesGrid notes={notesPage.content} /> : <NotesList notes={notesPage.content} />}
+          {view === "trash"
+            ? <TrashNotes layout={layout} notes={notesPage.content} />
+            : layout === "grid"
+              ? <NotesGrid notes={notesPage.content} />
+              : <NotesList notes={notesPage.content} />}
           {view !== "trash" && <NotesPagination page={notesPage} onPageChange={(page) => updateFilters({ page }, { resetPage: false })} />}
         </>
       )}

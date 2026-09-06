@@ -3,14 +3,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { categoryQueryKeys } from "@/features/categories/hooks/use-categories";
-import { createNote, deleteNote, favoriteNote, getNote, getTrashedNotes, pinNote, searchNotes, unfavoriteNote, unpinNote, updateNote } from "@/features/notes/api/notes-api";
+import { createNote, deleteNote, emptyTrash, favoriteNote, getNote, getNoteVersion, getNoteVersions, getTrashedNote, getTrashedNotes, permanentlyDeleteNote, pinNote, restoreNote, restoreNoteVersion, searchNotes, unfavoriteNote, unpinNote, updateNote } from "@/features/notes/api/notes-api";
 import type { NotePayload, NotesPage, NotesSearchFilters, NotesView } from "@/features/notes/types/note.types";
 
 export const notesQueryKeys = {
   detail: (noteId: number) => ["notes", "detail", noteId] as const,
+  trashDetail: (noteId: number) => ["notes", "trash-detail", noteId] as const,
   search: (filters: NotesSearchFilters) => ["notes", "search", filters] as const,
   searchRoot: ["notes", "search"] as const,
   trash: ["notes", "trash"] as const,
+  versions: (noteId: number) => ["notes", "versions", noteId] as const,
+  version: (noteId: number, versionId: number) => ["notes", "versions", noteId, versionId] as const,
 };
 
 type NoteInvalidationOptions = {
@@ -59,6 +62,30 @@ export function useNote(noteId: number) {
   });
 }
 
+export function useTrashedNote(noteId: number, enabled = true) {
+  return useQuery({
+    queryKey: notesQueryKeys.trashDetail(noteId),
+    queryFn: () => getTrashedNote(noteId),
+    enabled: enabled && Number.isSafeInteger(noteId) && noteId > 0,
+  });
+}
+
+export function useNoteVersions(noteId: number, enabled = true) {
+  return useQuery({
+    queryKey: notesQueryKeys.versions(noteId),
+    queryFn: () => getNoteVersions(noteId),
+    enabled: enabled && Number.isSafeInteger(noteId) && noteId > 0,
+  });
+}
+
+export function useNoteVersion(noteId: number, versionId: number | null) {
+  return useQuery({
+    queryKey: notesQueryKeys.version(noteId, versionId ?? 0),
+    queryFn: () => getNoteVersion(noteId, versionId ?? 0),
+    enabled: versionId !== null && Number.isSafeInteger(noteId) && noteId > 0,
+  });
+}
+
 export function useCreateNote() {
   const queryClient = useQueryClient();
 
@@ -91,6 +118,59 @@ export function useDeleteNote() {
     onSuccess: (_, noteId) => {
       queryClient.removeQueries({ queryKey: notesQueryKeys.detail(noteId) });
       return invalidateNoteLists(queryClient, { categoryCounts: true, trash: true });
+    },
+  });
+}
+
+export function useRestoreNote() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: restoreNote,
+    onSuccess: (note) => {
+      queryClient.setQueryData(notesQueryKeys.detail(note.id), note);
+      queryClient.removeQueries({ queryKey: notesQueryKeys.trashDetail(note.id) });
+      return invalidateNoteLists(queryClient, { categoryCounts: true, trash: true });
+    },
+  });
+}
+
+export function usePermanentlyDeleteNote() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: permanentlyDeleteNote,
+    onSuccess: (_, noteId) => {
+      queryClient.removeQueries({ queryKey: notesQueryKeys.detail(noteId) });
+      queryClient.removeQueries({ queryKey: notesQueryKeys.trashDetail(noteId) });
+      queryClient.removeQueries({ queryKey: notesQueryKeys.versions(noteId) });
+      return invalidateNoteLists(queryClient, { categoryCounts: true, trash: true });
+    },
+  });
+}
+
+export function useEmptyTrash() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: emptyTrash,
+    onSuccess: () => {
+      queryClient.removeQueries({ queryKey: ["notes", "trash-detail"] });
+      queryClient.removeQueries({ queryKey: ["notes", "versions"] });
+      return invalidateNoteLists(queryClient, { categoryCounts: true, trash: true });
+    },
+  });
+}
+
+export function useRestoreNoteVersion(noteId: number) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (versionId: number) => restoreNoteVersion(noteId, versionId),
+    onSuccess: (note) => {
+      queryClient.setQueryData(notesQueryKeys.detail(noteId), note);
+      void queryClient.invalidateQueries({ queryKey: notesQueryKeys.versions(noteId) });
+      return invalidateNoteLists(queryClient, { categoryCounts: true });
     },
   });
 }

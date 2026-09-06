@@ -103,6 +103,7 @@ body { background: var(--background); color: var(--foreground); }
 .notiva-editor-content td { position: relative; min-width: 7rem; border: 1px solid var(--border); padding: 0.55rem 0.7rem; text-align: left; vertical-align: top; }
 .notiva-editor-content th { background: var(--surface-muted); font-weight: 600; }
 .notiva-editor-content .selectedCell::after { position: absolute; inset: 0; pointer-events: none; content: ""; background: color-mix(in oklab, var(--primary) 12%, transparent); }
+.notiva-version-preview .notiva-editor-content { min-height: 14rem; padding: 1.25rem; }
 
 @media (max-width: 640px) {
   .notiva-editor-content { min-height: 56vh; padding: 1.25rem; }
