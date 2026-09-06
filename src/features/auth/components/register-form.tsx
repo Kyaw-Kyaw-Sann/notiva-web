@@ -1,7 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle2, LoaderCircle } from "lucide-react";
+import { AlertCircle, LoaderCircle, MailCheck } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -25,7 +26,11 @@ export function RegisterForm() {
     setSuccessMessage(null);
 
     try {
-      const response = await register({ displayName: values.displayName, email: values.email, password: values.password });
+      const response = await register({
+        displayName: values.displayName,
+        email: values.email,
+        password: values.password,
+      });
       setSuccessMessage(response.message);
       form.reset();
     } catch (error) {
@@ -39,15 +44,58 @@ export function RegisterForm() {
     }
   }
 
+  if (successMessage) {
+    return (
+      <div role="status" className="rounded-xl border border-success/25 bg-success/5 p-5 text-center">
+        <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-success/15 text-success">
+          <MailCheck className="size-6" aria-hidden="true" />
+        </span>
+        <h2 className="mt-4 text-lg font-semibold">Check your inbox</h2>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">{successMessage}</p>
+        <Button asChild className="mt-5 h-11 w-full">
+          <Link href="/login">Continue to sign in</Link>
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
-      {submitError && <div role="alert" className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">{submitError}</div>}
-      {successMessage && <div role="status" className="flex gap-2 rounded-md border border-success/30 bg-success/10 px-3 py-2 text-sm text-success"><CheckCircle2 className="mt-0.5 size-4 shrink-0" />{successMessage}</div>}
-      <div className="space-y-2"><Label htmlFor="displayName">Display name</Label><Input id="displayName" autoComplete="name" aria-invalid={Boolean(form.formState.errors.displayName)} {...form.register("displayName")} />{form.formState.errors.displayName && <p role="alert" className="text-xs text-destructive">{form.formState.errors.displayName.message}</p>}</div>
-      <div className="space-y-2"><Label htmlFor="registerEmail">Email</Label><Input id="registerEmail" type="email" autoComplete="email" aria-invalid={Boolean(form.formState.errors.email)} {...form.register("email")} />{form.formState.errors.email && <p role="alert" className="text-xs text-destructive">{form.formState.errors.email.message}</p>}</div>
-      <div className="space-y-2"><Label htmlFor="registerPassword">Password</Label><Input id="registerPassword" type="password" autoComplete="new-password" aria-invalid={Boolean(form.formState.errors.password)} {...form.register("password")} />{form.formState.errors.password && <p role="alert" className="text-xs text-destructive">{form.formState.errors.password.message}</p>}</div>
-      <div className="space-y-2"><Label htmlFor="confirmPassword">Confirm password</Label><Input id="confirmPassword" type="password" autoComplete="new-password" aria-invalid={Boolean(form.formState.errors.confirmPassword)} {...form.register("confirmPassword")} />{form.formState.errors.confirmPassword && <p role="alert" className="text-xs text-destructive">{form.formState.errors.confirmPassword.message}</p>}</div>
-      <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting && <LoaderCircle className="animate-spin" />}{form.formState.isSubmitting ? "Creating account…" : "Create account"}</Button>
+      {submitError && (
+        <div role="alert" className="flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-3.5 py-3 text-sm text-destructive">
+          <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+          {submitError}
+        </div>
+      )}
+
+      <div className="space-y-2">
+        <Label htmlFor="displayName">Display name</Label>
+        <Input id="displayName" autoComplete="name" placeholder="Your name" className="h-11" aria-invalid={Boolean(form.formState.errors.displayName)} {...form.register("displayName")} />
+        {form.formState.errors.displayName && <p role="alert" className="text-xs text-destructive">{form.formState.errors.displayName.message}</p>}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="registerEmail">Email</Label>
+        <Input id="registerEmail" type="email" autoComplete="email" placeholder="you@example.com" className="h-11" aria-invalid={Boolean(form.formState.errors.email)} {...form.register("email")} />
+        {form.formState.errors.email && <p role="alert" className="text-xs text-destructive">{form.formState.errors.email.message}</p>}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="registerPassword">Password</Label>
+        <Input id="registerPassword" type="password" autoComplete="new-password" placeholder="Create a secure password" className="h-11" aria-invalid={Boolean(form.formState.errors.password)} {...form.register("password")} />
+        {form.formState.errors.password && <p role="alert" className="text-xs text-destructive">{form.formState.errors.password.message}</p>}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="confirmPassword">Confirm password</Label>
+        <Input id="confirmPassword" type="password" autoComplete="new-password" placeholder="Repeat your password" className="h-11" aria-invalid={Boolean(form.formState.errors.confirmPassword)} {...form.register("confirmPassword")} />
+        {form.formState.errors.confirmPassword && <p role="alert" className="text-xs text-destructive">{form.formState.errors.confirmPassword.message}</p>}
+      </div>
+
+      <Button type="submit" className="h-11 w-full" disabled={form.formState.isSubmitting}>
+        {form.formState.isSubmitting && <LoaderCircle className="animate-spin" aria-hidden="true" />}
+        {form.formState.isSubmitting ? "Creating account…" : "Create account"}
+      </Button>
     </form>
   );
 }
