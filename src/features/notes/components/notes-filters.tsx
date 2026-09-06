@@ -4,10 +4,11 @@ import { Filter, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import type { NoteBackgroundColor, NoteCategory, NotesSearchFilters } from "@/features/notes/types/note.types";
+import type { Category } from "@/features/categories/types/category.types";
+import type { NoteBackgroundColor, NotesSearchFilters } from "@/features/notes/types/note.types";
 
 type NotesFiltersProps = {
-  categories?: NoteCategory[];
+  categories?: Category[];
   categoriesLoading: boolean;
   filters: NotesSearchFilters;
   onChange: (changes: Partial<NotesSearchFilters>) => void;

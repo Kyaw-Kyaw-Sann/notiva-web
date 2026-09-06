@@ -1,6 +1,7 @@
 "use client";
 
-import { LayoutGrid, List, NotebookText } from "lucide-react";
+import { LayoutGrid, List, NotebookText, Plus } from "lucide-react";
+import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -14,7 +15,8 @@ import { NotesList } from "@/features/notes/components/notes-list";
 import { NotesPagination } from "@/features/notes/components/notes-pagination";
 import { NotesSearch } from "@/features/notes/components/notes-search";
 import { NotesSort } from "@/features/notes/components/notes-sort";
-import { useNoteCategories, useNotes } from "@/features/notes/hooks/use-notes";
+import { useCategories } from "@/features/categories/hooks/use-categories";
+import { useNotes } from "@/features/notes/hooks/use-notes";
 import type { NotesSearchFilters, NotesView } from "@/features/notes/types/note.types";
 import { getNotesSearchFilters, setNotesSearchFilter } from "@/features/notes/utils/notes-search-params";
 import { normalizeApiError } from "@/lib/api";
@@ -36,7 +38,7 @@ export function NotesDashboard({ view }: NotesDashboardProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const filters = useMemo(() => getNotesSearchFilters(new URLSearchParams(searchParams.toString())), [searchParams]);
-  const { data: categories, isLoading: categoriesLoading } = useNoteCategories(view !== "trash");
+  const { data: categories, isLoading: categoriesLoading } = useCategories(view !== "trash");
   const { data: notesPage, error, isError, isLoading, refetch } = useNotes(view, filters);
   const sidebarView = view === "all" && filters.pinned === true && filters.favorite !== true
     ? "pinned"
@@ -87,6 +89,9 @@ export function NotesDashboard({ view }: NotesDashboardProps) {
               <List aria-hidden="true" />
             </Button>
           </div>
+          <Button asChild className="w-fit">
+            <Link href="/notes/new"><Plus aria-hidden="true" />New Note</Link>
+          </Button>
         </div>
       </div>
 

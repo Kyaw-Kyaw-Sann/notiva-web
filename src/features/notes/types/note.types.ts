@@ -19,6 +19,14 @@ export type Note = {
   updatedAt: string;
 };
 
+export type NotePayload = {
+  title: string;
+  contentJson: string;
+  plainText: string;
+  backgroundColor: NoteBackgroundColor;
+  categoryId: number | null;
+};
+
 export type NotesView = "all" | "pinned" | "favorites" | "trash";
 
 export type NoteSort = "UPDATED_DESC" | "UPDATED_ASC" | "CREATED_DESC" | "CREATED_ASC" | "TITLE_ASC" | "TITLE_DESC";

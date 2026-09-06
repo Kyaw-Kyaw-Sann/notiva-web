@@ -42,3 +42,68 @@ html { scroll-behavior: smooth; }
 body { background: var(--background); color: var(--foreground); }
 ::selection { background: var(--accent); color: var(--accent-foreground); }
 :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+/* Apply this only to dedicated app panes so browser page scrolling stays native. */
+.notiva-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.notiva-scrollbar::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.notiva-scrollbar::-webkit-scrollbar-track,
+.notiva-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.notiva-scrollbar::-webkit-scrollbar-thumb {
+  background-clip: content-box;
+  background-color: color-mix(in oklab, var(--muted-foreground) 34%, transparent);
+  border: 2px solid transparent;
+  border-radius: 9999px;
+}
+
+.notiva-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in oklab, var(--muted-foreground) 58%, transparent);
+}
+
+.notiva-editor-content {
+  min-height: 50vh;
+  padding: 1.5rem 2rem;
+  color: var(--foreground);
+  font-size: 1rem;
+  line-height: 1.75;
+  outline: none;
+}
+
+.notiva-editor-content:focus { box-shadow: inset 3px 0 0 color-mix(in oklab, var(--primary) 72%, transparent); }
+
+.notiva-editor-content > * + * { margin-top: 0.85rem; }
+.notiva-editor-content h1 { margin-top: 1.75rem; font-size: 1.75rem; font-weight: 700; line-height: 1.25; }
+.notiva-editor-content h2 { margin-top: 1.5rem; font-size: 1.4rem; font-weight: 650; line-height: 1.3; }
+.notiva-editor-content h3 { margin-top: 1.25rem; font-size: 1.15rem; font-weight: 650; line-height: 1.4; }
+.notiva-editor-content ul:not([data-type="taskList"]) { list-style: disc; padding-left: 1.5rem; }
+.notiva-editor-content ol { list-style: decimal; padding-left: 1.5rem; }
+.notiva-editor-content li + li { margin-top: 0.3rem; }
+.notiva-editor-content ul[data-type="taskList"] { list-style: none; padding-left: 0; }
+.notiva-editor-content ul[data-type="taskList"] li { display: flex; align-items: flex-start; gap: 0.6rem; }
+.notiva-editor-content ul[data-type="taskList"] li > label { margin-top: 0.2rem; user-select: none; }
+.notiva-editor-content ul[data-type="taskList"] li > div { min-width: 0; flex: 1; }
+.notiva-editor-content blockquote { border-left: 3px solid var(--primary); padding-left: 1rem; color: var(--muted-foreground); }
+.notiva-editor-content pre { overflow-x: auto; border-radius: 0.6rem; background: var(--muted); padding: 1rem; font-family: var(--font-geist-mono), monospace; font-size: 0.875rem; line-height: 1.65; }
+.notiva-editor-content :not(pre) > code { border-radius: 0.3rem; background: var(--muted); padding: 0.15rem 0.35rem; font-family: var(--font-geist-mono), monospace; font-size: 0.9em; }
+.notiva-editor-content hr { margin: 1.5rem 0; border: 0; border-top: 1px solid var(--border); }
+.notiva-editor-content a { color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
+.notiva-editor-content .tableWrapper { overflow-x: auto; }
+.notiva-editor-content table { width: 100%; min-width: 32rem; border-collapse: collapse; table-layout: fixed; }
+.notiva-editor-content th,
+.notiva-editor-content td { position: relative; min-width: 7rem; border: 1px solid var(--border); padding: 0.55rem 0.7rem; text-align: left; vertical-align: top; }
+.notiva-editor-content th { background: var(--surface-muted); font-weight: 600; }
+.notiva-editor-content .selectedCell::after { position: absolute; inset: 0; pointer-events: none; content: ""; background: color-mix(in oklab, var(--primary) 12%, transparent); }
+
+@media (max-width: 640px) {
+  .notiva-editor-content { min-height: 56vh; padding: 1.25rem; }
+}
