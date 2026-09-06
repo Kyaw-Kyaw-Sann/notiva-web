@@ -1,18 +1,20 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, LoaderCircle } from "lucide-react";
+import { ArrowLeft, LoaderCircle, MessageCircle, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AiWritingWorkspace } from "@/features/ai/components/ai-writing-workspace";
+import { NoteChatWorkspace } from "@/features/ai/components/note-chat-workspace";
 import { useCategories } from "@/features/categories/hooks/use-categories";
-import { NoteEditor } from "@/features/notes/components/editor/note-editor";
+import { NoteEditor, type NoteEditorHandle, type NoteEditorSelection } from "@/features/notes/components/editor/note-editor";
 import { SaveStatus } from "@/features/notes/components/editor/save-status";
 import { NoteActions } from "@/features/notes/components/note-actions";
 import { NoteBackgroundPicker } from "@/features/notes/components/note-background-picker";
@@ -51,6 +53,9 @@ export function NoteForm({ note }: { note?: Note }) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [editorRevision, setEditorRevision] = useState(0);
+  const [assistantPanel, setAssistantPanel] = useState<"writing" | "chat" | null>(null);
+  const [editorSelection, setEditorSelection] = useState<NoteEditorSelection>({ from: 1, hasSelection: false, text: "", to: 1 });
+  const editorRef = useRef<NoteEditorHandle>(null);
   const { data: categories = [], isLoading: categoriesLoading } = useCategories();
   const createNote = useCreateNote();
   const form = useForm<NoteFormValues>({
@@ -123,12 +128,14 @@ export function NoteForm({ note }: { note?: Note }) {
   const characterCount = plainText?.length ?? 0;
 
   return (
-    <form className="mx-auto w-full max-w-6xl" onSubmit={form.handleSubmit(onSubmit)} noValidate>
+    <form className={cn("mx-auto w-full", note && assistantPanel ? "max-w-[100rem]" : "max-w-6xl")} onSubmit={form.handleSubmit(onSubmit)} noValidate>
       <div className="mb-5 flex flex-col gap-4 border-b pb-5 sm:flex-row sm:items-center sm:justify-between">
         <Button asChild variant="ghost" className="w-fit px-2 text-muted-foreground">
           <Link href="/notes"><ArrowLeft aria-hidden="true" />Back to all notes</Link>
         </Button>
         <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+          {note && <Button type="button" variant={assistantPanel === "writing" ? "secondary" : "outline"} size="sm" onClick={() => setAssistantPanel((current) => current === "writing" ? null : "writing")} aria-expanded={assistantPanel === "writing"}><Sparkles aria-hidden="true" />AI Writing</Button>}
+          {note && <Button type="button" variant={assistantPanel === "chat" ? "secondary" : "outline"} size="sm" onClick={() => setAssistantPanel((current) => current === "chat" ? null : "chat")} aria-expanded={assistantPanel === "chat"}><MessageCircle aria-hidden="true" />Chat</Button>}
           {note && <NoteActions note={note} onVersionRestored={handleVersionRestored} versionHistoryDisabled={hasUnsavedChanges} />}
           {note ? (
             <SaveStatus error={autosave.error} hasUnsavedChanges={hasUnsavedChanges} onRetry={() => void autosave.saveNow()} status={autosave.status} />
@@ -144,7 +151,8 @@ export function NoteForm({ note }: { note?: Note }) {
 
       {submitError && <div className="mb-5 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive" role="alert">{submitError}</div>}
 
-      <div className={cn("overflow-hidden rounded-2xl border shadow-card transition-colors", noteBackgroundClasses[backgroundColor ?? "DEFAULT"])}>
+      <div className={cn(note && assistantPanel && "xl:grid xl:grid-cols-[minmax(0,1fr)_23rem] xl:items-start xl:gap-5")}>
+      <div className={cn("min-w-0 overflow-hidden rounded-2xl border shadow-card transition-colors", noteBackgroundClasses[backgroundColor ?? "DEFAULT"])}>
         <div className="border-b bg-background/65 px-5 py-5 backdrop-blur-sm sm:px-8">
           <Label htmlFor="note-title" className="sr-only">Note title</Label>
           <Input
@@ -180,10 +188,12 @@ export function NoteForm({ note }: { note?: Note }) {
 
         <NoteEditor
           key={editorRevision}
+          ref={editorRef}
           contentJson={contentJson ?? ""}
           fallbackPlainText={plainText ?? ""}
           disabled={isCreating}
           onReadyPlainText={(editorPlainText) => form.setValue("plainText", editorPlainText, { shouldDirty: false })}
+          onSelectionChange={setEditorSelection}
           onChange={({ contentJson: nextContentJson, plainText: nextPlainText }) => {
             form.setValue("contentJson", nextContentJson, { shouldDirty: true, shouldValidate: true });
             form.setValue("plainText", nextPlainText, { shouldDirty: true, shouldValidate: true });
@@ -203,6 +213,26 @@ export function NoteForm({ note }: { note?: Note }) {
             </span>
           </footer>
         )}
+      </div>
+      {note && assistantPanel === "writing" && (
+        <AiWritingWorkspace
+          categories={categories}
+          disabled={hasUnsavedChanges}
+          documentKey={contentJson ?? ""}
+          fullText={plainText ?? ""}
+          noteId={note.id}
+          onApplyCategory={(nextCategoryId) => form.setValue("categoryId", nextCategoryId, { shouldDirty: true, shouldValidate: true })}
+          onApplyTitle={(nextTitle) => form.setValue("title", nextTitle.slice(0, 255), { shouldDirty: true, shouldValidate: true })}
+          onInsertBelow={(selection, text) => editorRef.current?.insertBelow(selection, text)}
+          onOpenChange={(open) => setAssistantPanel(open ? "writing" : null)}
+          onReplace={(selection, text) => editorRef.current?.replaceTarget(selection, text)}
+          open
+          selection={editorSelection}
+        />
+      )}
+      {note && assistantPanel === "chat" && (
+        <NoteChatWorkspace noteId={note.id} noteTitle={note.title} onOpenChange={(open) => setAssistantPanel(open ? "chat" : null)} open />
+      )}
       </div>
     </form>
   );

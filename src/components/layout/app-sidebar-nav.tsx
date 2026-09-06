@@ -17,7 +17,7 @@ const navigationItems: NavigationItem[] = [
   { href: "/notes", label: "All Notes", icon: Inbox },
   { href: "/notes?pinned=true", label: "Pinned", icon: Pin },
   { href: "/notes?favorite=true", label: "Favorites", icon: Star },
-  { label: "AI Conversations", icon: BotMessageSquare },
+  { href: "/ai", label: "AI Conversations", icon: BotMessageSquare },
   { href: "/trash", label: "Recycle Bin", icon: Archive },
 ];
 
@@ -63,11 +63,7 @@ export function AppSidebarNav({ collapsed, onNavigate }: AppSidebarNavProps) {
               <Link key={label} href={href} onClick={onNavigate} className={className} aria-current={isActive ? "page" : undefined} title={collapsed ? label : undefined}>
                 {content}
               </Link>
-            ) : (
-              <button key={label} type="button" disabled className={cn(className, "cursor-not-allowed opacity-50")} title="Available in Phase 19">
-                {content}
-              </button>
-            )
+            ) : null
           );
         })}
       </nav>

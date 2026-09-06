@@ -4,15 +4,27 @@ import { TaskItem, TaskList } from "@tiptap/extension-list";
 import { TableKit } from "@tiptap/extension-table";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useEffect } from "react";
+import { forwardRef, useEffect, useImperativeHandle } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { EditorToolbar } from "@/features/notes/components/editor/editor-toolbar";
 import { getEditorContent } from "@/features/notes/utils/editor-content";
 
-type EditorValue = {
+export type EditorValue = {
   contentJson: string;
   plainText: string;
+};
+
+export type NoteEditorSelection = {
+  from: number;
+  hasSelection: boolean;
+  text: string;
+  to: number;
+};
+
+export type NoteEditorHandle = {
+  insertBelow: (selection: NoteEditorSelection, text: string) => void;
+  replaceTarget: (selection: NoteEditorSelection, text: string) => void;
 };
 
 type NoteEditorProps = {
@@ -21,10 +33,39 @@ type NoteEditorProps = {
   fallbackPlainText: string;
   onChange: (value: EditorValue) => void;
   onReadyPlainText: (plainText: string) => void;
+  onSelectionChange?: (selection: NoteEditorSelection) => void;
   showToolbar?: boolean;
 };
 
-export function NoteEditor({ contentJson, disabled, fallbackPlainText, onChange, onReadyPlainText, showToolbar = true }: NoteEditorProps) {
+function getSelection(editor: NonNullable<ReturnType<typeof useEditor>>): NoteEditorSelection {
+  const { from, to, empty } = editor.state.selection;
+
+  return {
+    from,
+    hasSelection: !empty,
+    text: empty ? "" : editor.state.doc.textBetween(from, to, "\n"),
+    to,
+  };
+}
+
+function toInlineContent(text: string) {
+  return text.split("\n").flatMap((line, index) => [
+    ...(index > 0 ? [{ type: "hardBreak" }] : []),
+    ...(line ? [{ type: "text", text: line }] : []),
+  ]);
+}
+
+function toDocumentContent(text: string) {
+  return {
+    type: "doc",
+    content: text.split(/\n{2,}/).map((paragraph) => ({
+      type: "paragraph",
+      content: toInlineContent(paragraph),
+    })),
+  };
+}
+
+export const NoteEditor = forwardRef<NoteEditorHandle, NoteEditorProps>(function NoteEditor({ contentJson, disabled, fallbackPlainText, onChange, onReadyPlainText, onSelectionChange, showToolbar = true }, ref) {
   const initialContent = getEditorContent(contentJson, fallbackPlainText).content;
   const editor = useEditor({
     extensions: [
@@ -56,7 +97,32 @@ export function NoteEditor({ contentJson, disabled, fallbackPlainText, onChange,
         plainText: currentEditor.getText({ blockSeparator: "\n" }),
       });
     },
+    onSelectionUpdate: ({ editor: currentEditor }) => {
+      onSelectionChange?.(getSelection(currentEditor));
+    },
   });
+
+  useImperativeHandle(ref, () => ({
+    replaceTarget: (selection, text) => {
+      if (!editor) return;
+
+      if (selection.hasSelection) {
+        editor.chain().focus().insertContentAt({ from: selection.from, to: selection.to }, toInlineContent(text)).run();
+        return;
+      }
+
+      editor.commands.setContent(toDocumentContent(text));
+      editor.commands.focus("end");
+    },
+    insertBelow: (selection, text) => {
+      if (!editor) return;
+
+      editor.chain().focus().setTextSelection(selection.to).insertContent([
+        { type: "paragraph" },
+        ...toDocumentContent(text).content,
+      ]).run();
+    },
+  }), [editor]);
 
   useEffect(() => {
     editor?.setEditable(!disabled);
@@ -72,4 +138,4 @@ export function NoteEditor({ contentJson, disabled, fallbackPlainText, onChange,
       <EditorContent editor={editor} />
     </div>
   );
-}
+});
