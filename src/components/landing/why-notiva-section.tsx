@@ -13,15 +13,15 @@ export function WhyNotivaSection() {
     <section className="border-y bg-surface-muted/50 py-16 sm:py-20 lg:py-24">
       <PageContainer className="py-0">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold text-primary">Why Notiva</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-primary">Why Notiva</p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Designed to help ideas stay useful</h2>
           <p className="mt-4 leading-7 text-muted-foreground">A thoughtful notes experience should reduce friction, respect your attention, and make returning to your work feel natural.</p>
         </div>
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
+        <div className="mt-10 grid gap-8 border-t pt-8 md:grid-cols-3">
           {reasons.map(({ icon: Icon, title, description }) => (
-            <article key={title} className="rounded-xl border bg-card p-6 text-center shadow-card">
-              <span className="mx-auto flex size-11 items-center justify-center rounded-full bg-accent text-primary"><Icon className="size-5" /></span>
-              <h3 className="mt-5 font-semibold">{title}</h3>
+            <article key={title}>
+              <Icon className="size-5 text-primary" aria-hidden="true" />
+              <h3 className="mt-4 font-semibold">{title}</h3>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
             </article>
           ))}

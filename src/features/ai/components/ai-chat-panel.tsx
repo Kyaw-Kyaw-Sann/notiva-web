@@ -11,7 +11,7 @@ import { useAiConversation, useAiMessages, useSendAiMessage } from "@/features/a
 import type { AiConversation } from "@/features/ai/types/ai.types";
 import { normalizeApiError } from "@/lib/api";
 
-export function AiChatPanel({ conversation, onDeleted }: { conversation: AiConversation; onDeleted: () => void }) {
+export function AiChatPanel({ conversation, onBack, onDeleted }: { conversation: AiConversation; onBack?: () => void; onDeleted: () => void }) {
   const [sendError, setSendError] = useState<string | null>(null);
   const conversationDetail = useAiConversation(conversation.id);
   const messages = useAiMessages(conversation.id);
@@ -31,7 +31,7 @@ export function AiChatPanel({ conversation, onDeleted }: { conversation: AiConve
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-background">
-      <ConversationHeader key={activeConversation.id} conversation={activeConversation} onDeleted={onDeleted} />
+      <ConversationHeader key={activeConversation.id} conversation={activeConversation} onBack={onBack} onDeleted={onDeleted} />
       {conversationDetail.isError && <div className="mx-4 mt-3 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs" role="alert"><p>{normalizeApiError(conversationDetail.error).message}</p><Button type="button" variant="ghost" size="sm" className="mt-1 h-7 px-2" onClick={() => void conversationDetail.refetch()}>Retry conversation</Button></div>}
       <div className="notiva-scrollbar min-h-0 flex-1 overflow-y-auto">
         {messages.isLoading && <div className="flex min-h-64 items-center justify-center"><LoaderCircle className="size-6 animate-spin text-primary" aria-label="Loading messages" /></div>}

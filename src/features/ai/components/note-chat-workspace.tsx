@@ -54,5 +54,5 @@ export function NoteChatWorkspace({ noteId, noteTitle, onOpenChange, open }: { n
   if (!open) return null;
   if (isDesktop) return <aside className="sticky top-5 h-[calc(100vh-2.5rem)] min-h-[36rem] overflow-hidden rounded-2xl border shadow-card" aria-label="Chat with this note">{content}</aside>;
 
-  return <Dialog open onOpenChange={onOpenChange}><DialogContent className="left-0 top-0 h-dvh w-full max-w-none translate-x-0 translate-y-0 overflow-hidden rounded-none border-0 p-0 md:left-auto md:right-0 md:w-[28rem] md:border-l"><DialogTitle className="sr-only">Chat with this note</DialogTitle>{content}</DialogContent></Dialog>;
+  return <Dialog open onOpenChange={onOpenChange}><DialogContent className="left-0 top-0 h-dvh w-full max-w-none translate-x-0 translate-y-0 overflow-hidden rounded-none border-0 p-0 pb-[env(safe-area-inset-bottom)] md:left-auto md:right-0 md:w-[28rem] md:border-l"><DialogTitle className="sr-only">Chat with this note</DialogTitle>{content}</DialogContent></Dialog>;
 }

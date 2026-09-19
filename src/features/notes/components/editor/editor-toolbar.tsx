@@ -1,7 +1,7 @@
 "use client";
 
 import type { Editor } from "@tiptap/core";
-import { Bold, Braces, CheckSquare, Italic, Link2, List, ListOrdered, Minus, Quote, Redo2, Strikethrough, Table2, Underline, Undo2 } from "lucide-react";
+import { Bold, Braces, CheckSquare, Italic, Link2, List, ListOrdered, Minus, MoreHorizontal, Quote, Redo2, Strikethrough, Table2, Underline, Undo2 } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -59,22 +59,22 @@ export function EditorToolbar({ editor, imageUpload }: EditorToolbarProps) {
         <ToolbarSeparator />
         <ToolbarButton label="Bold" isActive={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}><Bold /></ToolbarButton>
         <ToolbarButton label="Italic" isActive={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}><Italic /></ToolbarButton>
-        <ToolbarButton label="Underline" isActive={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}><Underline /></ToolbarButton>
-        <ToolbarButton label="Strike through" isActive={editor.isActive("strike")} onClick={() => editor.chain().focus().toggleStrike().run()}><Strikethrough /></ToolbarButton>
-        <ToolbarSeparator />
+        <ToolbarButton className="hidden sm:inline-flex" label="Underline" isActive={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}><Underline /></ToolbarButton>
+        <ToolbarButton className="hidden sm:inline-flex" label="Strike through" isActive={editor.isActive("strike")} onClick={() => editor.chain().focus().toggleStrike().run()}><Strikethrough /></ToolbarButton>
+        <span className="hidden sm:inline"><ToolbarSeparator /></span>
         <ToolbarButton label="Bullet list" isActive={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}><List /></ToolbarButton>
-        <ToolbarButton label="Numbered list" isActive={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}><ListOrdered /></ToolbarButton>
+        <ToolbarButton className="hidden sm:inline-flex" label="Numbered list" isActive={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}><ListOrdered /></ToolbarButton>
         <ToolbarButton label="Checklist" isActive={editor.isActive("taskList")} onClick={() => editor.chain().focus().toggleTaskList().run()}><CheckSquare /></ToolbarButton>
-        <ToolbarSeparator />
-        <ToolbarButton label="Code block" isActive={editor.isActive("codeBlock")} onClick={() => editor.chain().focus().toggleCodeBlock().run()}><Braces /></ToolbarButton>
-        <ToolbarButton label="Block quote" isActive={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote /></ToolbarButton>
-        <ToolbarButton label="Horizontal divider" onClick={() => editor.chain().focus().setHorizontalRule().run()}><Minus /></ToolbarButton>
+        <span className="hidden sm:inline"><ToolbarSeparator /></span>
+        <ToolbarButton className="hidden sm:inline-flex" label="Code block" isActive={editor.isActive("codeBlock")} onClick={() => editor.chain().focus().toggleCodeBlock().run()}><Braces /></ToolbarButton>
+        <ToolbarButton className="hidden sm:inline-flex" label="Block quote" isActive={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote /></ToolbarButton>
+        <ToolbarButton className="hidden sm:inline-flex" label="Horizontal divider" onClick={() => editor.chain().focus().setHorizontalRule().run()}><Minus /></ToolbarButton>
         <ToolbarButton label={editor.isActive("link") ? "Edit link" : "Add link"} isActive={editor.isActive("link")} onClick={() => setLinkDialogOpen(true)}><Link2 /></ToolbarButton>
         <ImageUpload {...imageUpload} disabled={!editor.isEditable} />
         {editor.isActive("image") && <RemoveImageButton disabled={!editor.isEditable} onRemove={() => editor.chain().focus().deleteSelection().run()} />}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button type="button" variant={editor.isActive("table") ? "secondary" : "ghost"} size="icon" className="size-9 shrink-0" aria-label="Table actions" title="Table actions"><Table2 /></Button>
+            <Button type="button" variant={editor.isActive("table") ? "secondary" : "ghost"} size="icon" className="hidden size-9 shrink-0 sm:inline-flex" aria-label="Table actions" title="Table actions"><Table2 /></Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <DropdownMenuItem onSelect={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}>Insert 3 × 3 table</DropdownMenuItem>
@@ -87,9 +87,26 @@ export function EditorToolbar({ editor, imageUpload }: EditorToolbarProps) {
             <DropdownMenuItem disabled={!editor.can().deleteTable()} className="text-destructive focus:text-destructive" onSelect={() => editor.chain().focus().deleteTable().run()}>Delete table</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <ToolbarSeparator />
-        <ToolbarButton label="Undo" disabled={!editor.can().undo()} onClick={() => editor.chain().focus().undo().run()}><Undo2 /></ToolbarButton>
-        <ToolbarButton label="Redo" disabled={!editor.can().redo()} onClick={() => editor.chain().focus().redo().run()}><Redo2 /></ToolbarButton>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button type="button" variant="ghost" size="icon" className="size-9 shrink-0 sm:hidden" aria-label="More formatting actions" title="More formatting actions"><MoreHorizontal /></Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-52">
+            <DropdownMenuItem onSelect={() => editor.chain().focus().toggleUnderline().run()}><Underline />Underline</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => editor.chain().focus().toggleStrike().run()}><Strikethrough />Strike through</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => editor.chain().focus().toggleOrderedList().run()}><ListOrdered />Numbered list</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => editor.chain().focus().toggleCodeBlock().run()}><Braces />Code block</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => editor.chain().focus().toggleBlockquote().run()}><Quote />Block quote</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => editor.chain().focus().setHorizontalRule().run()}><Minus />Divider</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}><Table2 />Insert table</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem disabled={!editor.can().undo()} onSelect={() => editor.chain().focus().undo().run()}><Undo2 />Undo</DropdownMenuItem>
+            <DropdownMenuItem disabled={!editor.can().redo()} onSelect={() => editor.chain().focus().redo().run()}><Redo2 />Redo</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <span className="hidden sm:inline"><ToolbarSeparator /></span>
+        <ToolbarButton className="hidden sm:inline-flex" label="Undo" disabled={!editor.can().undo()} onClick={() => editor.chain().focus().undo().run()}><Undo2 /></ToolbarButton>
+        <ToolbarButton className="hidden sm:inline-flex" label="Redo" disabled={!editor.can().redo()} onClick={() => editor.chain().focus().redo().run()}><Redo2 /></ToolbarButton>
       </div>
       {linkDialogOpen && <LinkDialog editor={editor} onOpenChange={setLinkDialogOpen} />}
     </>

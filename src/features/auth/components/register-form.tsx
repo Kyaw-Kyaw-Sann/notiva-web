@@ -48,10 +48,8 @@ export function RegisterForm() {
 
   if (successMessage) {
     return (
-      <div role="status" className="rounded-xl border border-success/25 bg-success/5 p-5 text-center">
-        <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-success/15 text-success">
-          <MailCheck className="size-6" aria-hidden="true" />
-        </span>
+      <div role="status" className="rounded-xl border border-success/25 bg-success/5 p-5">
+        <MailCheck className="size-6 text-success" aria-hidden="true" />
         <h2 className="mt-4 text-lg font-semibold">Check your inbox</h2>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">{successMessage}</p>
         {registeredEmail && <p className="mt-2 break-all text-sm font-medium text-foreground">{registeredEmail}</p>}

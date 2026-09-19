@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { AppProviders } from "@/providers/app-providers";
-
-import "@/lib/constants/env";
+import { env } from "@/lib/constants/env";
 
 import "./globals.css";
 
@@ -18,8 +17,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Notiva",
-  description: "A focused note-taking and AI-assisted productivity app.",
+  metadataBase: new URL(env.siteUrl),
+  applicationName: "Notiva",
+  title: {
+    default: "Notiva — Notes, writing, and ideas in one workspace",
+    template: "%s | Notiva",
+  },
+  description: "A focused note-taking workspace with rich-text editing, reliable organization, version history, and user-controlled AI assistance.",
+  keywords: ["Notiva", "note taking", "rich text editor", "AI writing assistant", "productivity"],
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: "Notiva",
+    title: "Notiva — Notes, writing, and ideas in one workspace",
+    description: "Capture, organize, and develop ideas in a focused notes workspace.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Notiva — Notes, writing, and ideas in one workspace",
+    description: "Capture, organize, and develop ideas in a focused notes workspace.",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

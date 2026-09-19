@@ -14,7 +14,7 @@ export function NotesPreviewSection() {
     <section className="py-16 sm:py-20 lg:py-24">
       <PageContainer className="py-0">
         <div className="grid items-center gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:gap-14">
-          <div className="overflow-hidden rounded-2xl border bg-surface p-2 shadow-overlay sm:p-3"><Image src="/UX2.png" alt="Notiva rich-text note editor with an optional AI conversation panel" width={1586} height={992} sizes="(max-width: 1024px) 94vw, 720px" className="h-auto w-full rounded-lg border" /></div>
+          <div className="overflow-hidden rounded-xl border bg-surface p-2 shadow-card"><Image src="/DS2.png" alt="Notiva rich-text editor showing an image note, formatting toolbar, save status, and note-specific AI chat" width={1866} height={918} sizes="(max-width: 1024px) 94vw, 720px" unoptimized className="h-auto w-full rounded-lg border" /></div>
           <div>
             <span className="flex size-11 items-center justify-center rounded-xl bg-accent text-primary"><FileText className="size-5" /></span>
             <h2 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl">A writing space made for focus</h2>

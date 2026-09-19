@@ -32,7 +32,7 @@ type AiWritingActionsProps = {
 export function AiWritingActions(props: AiWritingActionsProps) {
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 gap-2 min-[390px]:grid-cols-2">
         <Button type="button" variant="outline" className="h-auto justify-start py-3" disabled={props.disabled} onClick={props.onGenerateTitle}><Heading1 aria-hidden="true" />Generate title</Button>
         <Button type="button" variant="outline" className="h-auto justify-start py-3" disabled={props.disabled} onClick={props.onSuggestCategory}><Tags aria-hidden="true" />Suggest category</Button>
       </div>
@@ -51,7 +51,7 @@ export function AiWritingActions(props: AiWritingActionsProps) {
 
       <div className="space-y-2">
         <p className="text-sm font-medium">Writing tools</p>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 min-[390px]:grid-cols-2">
           {writingActions.map((item) => (
             <Button key={item.action} type="button" variant="ghost" className="h-auto justify-start border px-3 py-2.5 text-left" disabled={props.disabled} onClick={() => props.onRunWriting(item.action)}>
               {item.action === "CONTINUE" ? <ListRestart aria-hidden="true" /> : <Sparkles aria-hidden="true" />}

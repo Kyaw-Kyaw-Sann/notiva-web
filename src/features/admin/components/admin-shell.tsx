@@ -25,11 +25,12 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-sm">
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:px-6 lg:px-8">
           <NotivaBrand />
-          <span className="hidden rounded-full border bg-surface-muted px-2.5 py-1 text-xs font-semibold text-muted-foreground sm:inline-flex">Admin</span>
-          <nav className="ml-8 hidden items-center gap-1 md:flex" aria-label="Admin navigation">
+          <span className="hidden h-5 border-l sm:block" aria-hidden="true" />
+          <span className="hidden text-sm font-medium text-muted-foreground sm:inline">Admin console</span>
+          <nav className="ml-6 hidden h-full items-center gap-6 md:flex" aria-label="Admin navigation">
             {navigation.map(({ href, icon: Icon, label }) => {
               const active = href === "/admin" ? pathname === href : pathname.startsWith(href);
-              return <Link key={href} href={href} className={cn("flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground", active && "bg-primary/10 text-primary")} aria-current={active ? "page" : undefined}><Icon className="size-4" />{label}</Link>;
+              return <Link key={href} href={href} className={cn("relative flex h-full items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground", active && "text-foreground after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-primary")} aria-current={active ? "page" : undefined}><Icon className="size-4" />{label}</Link>;
             })}
           </nav>
           <div className="ml-auto hidden items-center gap-3 md:flex">
@@ -52,7 +53,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
           </nav>
         )}
       </header>
-      <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">{children}</main>
+      <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">{children}</main>
     </div>
   );
 }

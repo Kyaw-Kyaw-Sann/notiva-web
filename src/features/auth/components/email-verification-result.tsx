@@ -57,10 +57,8 @@ export function EmailVerificationResult() {
 
   if (state.status === "loading") {
     return (
-      <div className="rounded-xl border bg-surface p-5 text-center" aria-live="polite" aria-busy="true">
-        <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-accent text-primary">
-          <LoaderCircle className="size-6 animate-spin" aria-hidden="true" />
-        </span>
+      <div className="rounded-xl border bg-surface p-5" aria-live="polite" aria-busy="true">
+        <LoaderCircle className="size-5 animate-spin text-primary" aria-hidden="true" />
         <p className="mt-4 text-sm leading-6 text-muted-foreground">{state.message}</p>
       </div>
     );
@@ -68,10 +66,8 @@ export function EmailVerificationResult() {
 
   if (state.status === "success") {
     return (
-      <div className="rounded-xl border border-success/25 bg-success/5 p-5 text-center" role="status">
-        <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-success/15 text-success">
-          <CheckCircle2 className="size-6" aria-hidden="true" />
-        </span>
+      <div className="rounded-xl border border-success/25 bg-success/5 p-5" role="status">
+        <CheckCircle2 className="size-6 text-success" aria-hidden="true" />
         <h2 className="mt-4 text-lg font-semibold">Email verified</h2>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">{state.message}</p>
         <Button asChild className="mt-5 h-11 w-full">
@@ -82,10 +78,8 @@ export function EmailVerificationResult() {
   }
 
   return (
-    <div className="rounded-xl border border-destructive/25 bg-destructive/5 p-5 text-center" role="alert">
-      <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
-        <AlertCircle className="size-6" aria-hidden="true" />
-      </span>
+    <div className="rounded-xl border border-destructive/25 bg-destructive/5 p-5" role="alert">
+      <AlertCircle className="size-6 text-destructive" aria-hidden="true" />
       <h2 className="mt-4 text-lg font-semibold">Verification unsuccessful</h2>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">{state.message}</p>
       <div className="mt-5 grid gap-2 sm:grid-cols-2">

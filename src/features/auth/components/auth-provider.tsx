@@ -97,7 +97,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return nextSession;
         })
         .catch((error: unknown) => {
-          clearSession();
+          if (sessionVersionRef.current === refreshVersion) {
+            clearSession();
+          }
           throw error;
         })
         .finally(() => {
@@ -123,22 +125,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     async function initializeSession() {
       await Promise.resolve();
+      const initializationVersion = sessionVersionRef.current;
       const storedSession = readAuthSession();
 
       if (!storedSession) {
-        if (isActive) clearSession();
+        if (isActive && sessionVersionRef.current === initializationVersion) {
+          clearSession();
+        }
         return;
       }
+
+      let validationVersion = initializationVersion;
 
       try {
         const activeSession = storedSession.expiresAt !== null && storedSession.expiresAt <= Date.now()
           ? await refreshCurrentSession(storedSession)
           : storedSession;
+        validationVersion = sessionVersionRef.current;
+
+        if (sessionRef.current && sessionRef.current.accessToken !== activeSession.accessToken) {
+          return;
+        }
+
         const user = await getCurrentUser(activeSession.accessToken);
 
-        if (isActive) establishSession({ ...activeSession, user });
+        if (
+          isActive
+          && sessionVersionRef.current === validationVersion
+          && (!sessionRef.current || sessionRef.current.accessToken === activeSession.accessToken)
+        ) {
+          establishSession({ ...activeSession, user });
+        }
       } catch {
-        if (isActive) clearSession();
+        if (isActive && sessionVersionRef.current === validationVersion) {
+          clearSession();
+        }
       }
     }
 

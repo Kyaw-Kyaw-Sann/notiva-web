@@ -9,13 +9,13 @@ type AuthLayoutProps = {
 
 export function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <main className="min-h-svh bg-background lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(28rem,0.95fr)]">
+    <main className="min-h-svh bg-background lg:grid lg:grid-cols-[minmax(28rem,0.82fr)_minmax(0,1.18fr)]">
       <section className="flex min-h-svh flex-col px-5 py-6 sm:px-10 sm:py-8 lg:px-12 xl:px-16">
         <header>
           <NotivaBrand />
         </header>
 
-        <div className="flex flex-1 items-center justify-center py-10 sm:py-14">{children}</div>
+        <div className="flex flex-1 items-center justify-center py-10 sm:py-12">{children}</div>
 
         <p className="text-center text-xs text-muted-foreground sm:text-left">
           A calm workspace for your notes and ideas.
