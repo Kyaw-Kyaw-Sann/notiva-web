@@ -1,20 +1,21 @@
 "use client";
 
-import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
-import { Menu } from "lucide-react";
+import { Menu, PanelLeft } from "lucide-react";
 
 import { NotivaBrand } from "@/components/landing/notiva-brand";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type AppHeaderProps = {
+  className?: string;
   onOpenMobileSidebar: () => void;
   sidebarVisible: boolean;
   onToggleSidebar: () => void;
 };
 
-export function AppHeader({ onOpenMobileSidebar, sidebarVisible, onToggleSidebar }: AppHeaderProps) {
+export function AppHeader({ className, onOpenMobileSidebar, sidebarVisible, onToggleSidebar }: AppHeaderProps) {
   return (
-    <header className="flex h-16 shrink-0 items-center border-b bg-background px-4 sm:px-6">
+    <header className={cn("flex h-16 shrink-0 items-center border-b bg-background px-4 sm:px-6", className)}>
       <div className="flex min-w-0 items-center gap-3 lg:hidden">
         <Button
           id="mobile-navigation-trigger"
@@ -38,7 +39,7 @@ export function AppHeader({ onOpenMobileSidebar, sidebarVisible, onToggleSidebar
         aria-label={sidebarVisible ? "Hide sidebar" : "Show sidebar"}
         title={sidebarVisible ? "Hide sidebar" : "Show sidebar"}
       >
-        {sidebarVisible ? <PanelLeftClose aria-hidden="true" /> : <PanelLeftOpen aria-hidden="true" />}
+        <PanelLeft aria-hidden="true" />
       </Button>
       <div className="ml-3 hidden lg:block">
         <p className="text-sm font-medium text-muted-foreground">Workspace</p>

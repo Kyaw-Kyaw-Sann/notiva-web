@@ -36,8 +36,8 @@ export function AdminUsers() {
 
   return (
     <section>
-      <div className="mb-7 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-        <div><p className="text-sm font-medium text-primary">Administration</p><h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Users</h1><p className="mt-2 text-sm text-muted-foreground">Review account metadata without exposing private user content.</p></div>
+      <div className="mb-8 flex flex-col gap-5 border-b pb-6 lg:flex-row lg:items-end lg:justify-between">
+        <div><h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Users</h1><p className="mt-2 text-sm text-muted-foreground">Search and review documented account metadata without exposing private user content.</p></div>
         <AdminUserSearch value={filters.search} onSearch={(search) => updateUrl(search, 0)} />
       </div>
 

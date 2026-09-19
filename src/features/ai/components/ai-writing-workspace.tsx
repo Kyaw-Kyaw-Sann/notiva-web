@@ -50,7 +50,7 @@ export function AiWritingWorkspace(props: AiWritingWorkspaceProps) {
 
   return (
     <Dialog open onOpenChange={props.onOpenChange}>
-      <DialogContent className="left-0 top-0 h-dvh w-full max-w-none translate-x-0 translate-y-0 overflow-hidden rounded-none border-0 p-0 md:left-auto md:right-0 md:w-[28rem] md:border-l">
+      <DialogContent className="left-0 top-0 h-dvh w-full max-w-none translate-x-0 translate-y-0 overflow-hidden rounded-none border-0 p-0 pb-[env(safe-area-inset-bottom)] md:left-auto md:right-0 md:w-[28rem] md:border-l">
         <DialogTitle className="sr-only">AI Writing assistant</DialogTitle>
         {panel}
       </DialogContent>

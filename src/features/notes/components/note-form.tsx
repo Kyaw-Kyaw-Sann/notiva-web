@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, LoaderCircle, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowLeft, LoaderCircle, MessageCircle, PanelLeftClose, PanelLeftOpen, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -9,6 +9,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { useAppShell } from "@/components/layout/app-shell-context";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AiWritingWorkspace } from "@/features/ai/components/ai-writing-workspace";
@@ -52,6 +53,7 @@ function getDefaultValues(note?: Note): NoteFormValues {
 
 export function NoteForm({ note }: { note?: Note }) {
   const router = useRouter();
+  const { sidebarVisible, toggleSidebar } = useAppShell();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [createdNoteId, setCreatedNoteId] = useState<number | null>(null);
   const [editorRevision, setEditorRevision] = useState(0);
@@ -148,22 +150,28 @@ export function NoteForm({ note }: { note?: Note }) {
 
   return (
     <form className={cn("mx-auto w-full", note && assistantPanel ? "max-w-[100rem]" : editorWidth === "wide" ? "max-w-[90rem]" : "max-w-6xl")} onSubmit={form.handleSubmit(onSubmit)} noValidate>
-      <div className="mb-5 flex flex-col gap-4 border-b pb-5 sm:flex-row sm:items-center sm:justify-between">
-        <Button asChild variant="ghost" className="w-fit px-2 text-muted-foreground">
-          <Link href="/notes"><ArrowLeft aria-hidden="true" />Back to all notes</Link>
-        </Button>
-        <div className="flex flex-wrap items-center gap-2 sm:justify-end">
-          {note && <Button type="button" variant={assistantPanel === "writing" ? "secondary" : "outline"} size="sm" onClick={() => setAssistantPanel((current) => current === "writing" ? null : "writing")} aria-expanded={assistantPanel === "writing"}><Sparkles aria-hidden="true" />AI Writing</Button>}
-          {note && <Button type="button" variant={assistantPanel === "chat" ? "secondary" : "outline"} size="sm" onClick={() => setAssistantPanel((current) => current === "chat" ? null : "chat")} aria-expanded={assistantPanel === "chat"}><MessageCircle aria-hidden="true" />Chat</Button>}
+      <div className="sticky top-0 z-30 mb-3 flex items-center justify-between gap-2 border-b bg-background/95 pb-3 pt-1 backdrop-blur-sm">
+        <div className="flex min-w-0 items-center gap-1">
+          <Button type="button" variant="ghost" size="icon" className="hidden size-9 text-muted-foreground lg:inline-flex" onClick={toggleSidebar} aria-label={sidebarVisible ? "Hide sidebar" : "Show sidebar"} title={sidebarVisible ? "Hide sidebar" : "Show sidebar"}>
+            {sidebarVisible ? <PanelLeftClose aria-hidden="true" /> : <PanelLeftOpen aria-hidden="true" />}
+          </Button>
+          <Button asChild variant="ghost" size="sm" className="h-9 px-2 text-muted-foreground sm:px-3">
+            <Link href="/notes"><ArrowLeft aria-hidden="true" /><span className="hidden sm:inline">Back</span></Link>
+          </Button>
+        </div>
+        <div className="flex min-w-0 items-center gap-1 sm:gap-2">
+          {note && <Button type="button" variant={assistantPanel === "writing" ? "secondary" : "outline"} size="sm" className="h-9 px-2.5" onClick={() => setAssistantPanel((current) => current === "writing" ? null : "writing")} aria-expanded={assistantPanel === "writing"}><Sparkles aria-hidden="true" /><span className="hidden sm:inline">AI Writing</span></Button>}
+          {note && <Button type="button" variant={assistantPanel === "chat" ? "secondary" : "outline"} size="sm" className="h-9 px-2.5" onClick={() => setAssistantPanel((current) => current === "chat" ? null : "chat")} aria-expanded={assistantPanel === "chat"}><MessageCircle aria-hidden="true" /><span className="hidden sm:inline">Chat</span></Button>}
           {note && <NoteActions note={note} onVersionRestored={handleVersionRestored} versionHistoryDisabled={hasUnsavedChanges} />}
           {note ? (
-            <SaveStatus error={autosave.error} hasUnsavedChanges={hasUnsavedChanges} onRetry={() => void autosave.saveNow()} status={autosave.status} />
+            <div className="hidden sm:block"><SaveStatus error={autosave.error} hasUnsavedChanges={hasUnsavedChanges} onRetry={() => void autosave.saveNow()} status={autosave.status} /></div>
           ) : (
-            <span className="px-2 text-xs text-muted-foreground" aria-live="polite">{saveStatus}</span>
+            <span className="hidden px-2 text-xs text-muted-foreground sm:inline" aria-live="polite">{saveStatus}</span>
           )}
-          <Button type="submit" className="min-w-24" disabled={isCreating || (Boolean(note) && (!form.formState.isDirty || !form.formState.isValid || autosave.status === "saving"))}>
+          <Button type="submit" size="sm" className="h-9 px-3 sm:min-w-24" disabled={isCreating || (Boolean(note) && (!form.formState.isDirty || !form.formState.isValid || autosave.status === "saving"))}>
             {isCreating && <LoaderCircle className="animate-spin" aria-hidden="true" />}
-            {note ? "Save now" : "Create note"}
+            <span className="hidden sm:inline">{note ? "Save now" : "Create note"}</span>
+            <span className="sm:hidden">{note ? "Save" : "Create"}</span>
           </Button>
         </div>
       </div>
@@ -171,26 +179,26 @@ export function NoteForm({ note }: { note?: Note }) {
       {submitError && <div className="mb-5 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive" role="alert">{submitError}</div>}
 
       <div className={cn(note && assistantPanel && "xl:grid xl:grid-cols-[minmax(0,1fr)_23rem] xl:items-start xl:gap-5")}>
-      <div className={cn("min-w-0 overflow-hidden rounded-2xl border shadow-card transition-colors", noteBackgroundClasses[backgroundColor ?? "DEFAULT"])}>
-        <div className="border-b bg-background/65 px-5 py-5 backdrop-blur-sm sm:px-8">
-          <Label htmlFor="note-title" className="sr-only">Note title</Label>
-          <Input
-            id="note-title"
-            autoFocus={!note}
-            maxLength={255}
-            placeholder="Untitled note"
-            className="h-auto border-0 bg-transparent px-0 py-1 text-2xl font-semibold tracking-tight shadow-none hover:border-0 focus-visible:ring-0 sm:text-3xl"
-            aria-invalid={Boolean(form.formState.errors.title)}
-            {...form.register("title")}
-          />
-          {form.formState.errors.title && <p className="mt-2 text-xs text-destructive" role="alert">{form.formState.errors.title.message}</p>}
-
-          <div className="mt-5 grid gap-5 border-t pt-5 sm:grid-cols-[minmax(12rem,1fr)_auto] sm:items-end">
-            <div className="space-y-2">
-              <Label htmlFor="note-category" className="text-xs text-muted-foreground">Category</Label>
+      <div className={cn("min-w-0 overflow-hidden rounded-xl border shadow-card transition-colors", noteBackgroundClasses[backgroundColor ?? "DEFAULT"])}>
+        <div className="border-b bg-background/65 px-4 py-3 backdrop-blur-sm sm:px-5">
+          <div className="grid grid-cols-[minmax(0,1fr)_minmax(7rem,10rem)_auto] items-center gap-2 sm:grid-cols-[minmax(0,1fr)_12rem_auto] sm:gap-3">
+            <div className="min-w-0">
+              <Label htmlFor="note-title" className="sr-only">Note title</Label>
+              <Input
+                id="note-title"
+                autoFocus={!note}
+                maxLength={255}
+                placeholder="Untitled note"
+                className="h-10 border-0 bg-transparent px-0 text-xl font-semibold tracking-tight shadow-none hover:border-0 focus-visible:ring-0 sm:text-2xl"
+                aria-invalid={Boolean(form.formState.errors.title)}
+                {...form.register("title")}
+              />
+            </div>
+            <div className="min-w-0">
+              <Label htmlFor="note-category" className="sr-only">Category</Label>
               <select
                 id="note-category"
-                className="h-10 w-full max-w-xs rounded-lg border bg-surface px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                className="h-9 w-full min-w-0 rounded-lg border bg-surface px-2.5 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                 value={categoryId ?? ""}
                 disabled={categoriesLoading || isCreating}
                 onChange={(event) => form.setValue("categoryId", event.target.value ? Number(event.target.value) : null, { shouldDirty: true, shouldValidate: true })}
@@ -199,10 +207,10 @@ export function NoteForm({ note }: { note?: Note }) {
                 <option value="">Uncategorized</option>
                 {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
               </select>
-              {form.formState.errors.categoryId && <p className="text-xs text-destructive" role="alert">{form.formState.errors.categoryId.message}</p>}
             </div>
             <NoteBackgroundPicker value={backgroundColor ?? "DEFAULT"} disabled={isCreating} onChange={(value) => form.setValue("backgroundColor", value, { shouldDirty: true, shouldValidate: true })} />
           </div>
+          {(form.formState.errors.title || form.formState.errors.categoryId) && <p className="mt-2 text-xs text-destructive" role="alert">{form.formState.errors.title?.message ?? form.formState.errors.categoryId?.message}</p>}
         </div>
 
         <NoteEditor

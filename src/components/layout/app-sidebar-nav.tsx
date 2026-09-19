@@ -1,11 +1,12 @@
 "use client";
 
-import { Archive, BotMessageSquare, Inbox, Pin, Star } from "lucide-react";
+import { Archive, BotMessageSquare, Inbox, Pin, ShieldCheck, Star } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
 import { CategoryList } from "@/features/categories/components/category-list";
 import { useAiConversations } from "@/features/ai/hooks/use-ai-conversations";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 import { useNotes } from "@/features/notes/hooks/use-notes";
 import type { NotesSearchFilters } from "@/features/notes/types/note.types";
 import { cn } from "@/lib/utils";
@@ -31,6 +32,7 @@ type AppSidebarNavProps = {
 export function AppSidebarNav({ collapsed, onNavigate }: AppSidebarNavProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { user } = useAuth();
   const allNotes = useNotes("all", countFilters);
   const pinnedNotes = useNotes("pinned", { ...countFilters, pinned: true });
   const favoriteNotes = useNotes("favorites", { ...countFilters, favorite: true });
@@ -42,6 +44,7 @@ export function AppSidebarNav({ collapsed, onNavigate }: AppSidebarNavProps) {
     { href: "/notes?favorite=true", label: "Favorites", icon: Star, count: favoriteNotes.data?.totalElements },
     { href: "/ai", label: "AI Conversations", icon: BotMessageSquare, count: conversations.data?.length },
     { href: "/trash", label: "Recycle Bin", icon: Archive, count: trashedNotes.data?.totalElements },
+    ...(user?.role === "ADMIN" ? [{ href: "/admin", label: "Admin Dashboard", icon: ShieldCheck }] : []),
   ];
 
   return (
@@ -60,7 +63,9 @@ export function AppSidebarNav({ collapsed, onNavigate }: AppSidebarNavProps) {
               ? pathname === "/notes" && searchParams.get("pinned") === "true" && searchParams.get("favorite") !== "true"
               : href === "/notes?favorite=true"
                 ? pathname === "/notes" && searchParams.get("favorite") === "true" && searchParams.get("pinned") !== "true"
-                : href === pathname;
+                : href === "/admin"
+                  ? pathname.startsWith("/admin")
+                  : href === pathname;
           const className = cn(
             "relative flex min-h-11 w-full touch-manipulation items-center rounded-lg px-3 text-sm font-medium transition-colors hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             collapsed && "justify-center px-0",

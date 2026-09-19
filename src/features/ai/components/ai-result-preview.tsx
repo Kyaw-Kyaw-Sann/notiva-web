@@ -44,7 +44,7 @@ export function AiResultPreview({ hasSelection, isStale, onApplyCategory, onAppl
         <p className="mt-3 rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-xs text-foreground">The note changed after this result was generated. Generate again before applying it.</p>
       )}
 
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="sticky -bottom-4 -mx-4 mb-[-1rem] mt-4 flex flex-wrap gap-2 border-t bg-surface/95 px-4 pb-4 pt-3 backdrop-blur-sm">
         {result.kind === "text" && (
           <>
             <Button type="button" size="sm" disabled={isStale} onClick={onReplace}><Replace aria-hidden="true" />{hasSelection ? "Replace selection" : "Replace note"}</Button>

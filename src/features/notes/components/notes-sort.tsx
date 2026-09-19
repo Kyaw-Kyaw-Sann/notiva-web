@@ -13,12 +13,15 @@ type NotesSortProps = {
 };
 
 export function NotesSort({ onSortChange, sort }: NotesSortProps) {
+  const selectedLabel = noteSortOptions.find((option) => option.value === sort)?.label ?? "Sort";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="h-10 gap-2 bg-background px-3">
+        <Button variant="outline" className="h-11 min-w-0 flex-1 gap-2 bg-background px-3 sm:h-10 sm:flex-none">
           <ArrowDownUp aria-hidden="true" />
-          Sort
+          <span className="truncate sm:hidden">{selectedLabel}</span>
+          <span className="hidden sm:inline">Sort</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">

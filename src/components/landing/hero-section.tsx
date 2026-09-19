@@ -1,39 +1,38 @@
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { PageContainer } from "@/components/layout/page-container";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+
+const highlights = ["Focused note workspace", "AI suggestions stay optional", "Available on every screen"];
 
 export function HeroSection() {
   return (
-    <section className="relative overflow-hidden border-b">
-      <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96 bg-[radial-gradient(circle_at_top,oklch(0.92_0.07_280_/_0.7),transparent_68%)] dark:bg-[radial-gradient(circle_at_top,oklch(0.35_0.09_280_/_0.45),transparent_68%)]" />
-      <PageContainer className="pb-16 pt-16 sm:pb-20 sm:pt-24 lg:pb-24 lg:pt-28">
-        <div className="mx-auto max-w-4xl text-center">
-          <Badge variant="secondary" className="mb-5">Your notes, thoughtfully organized</Badge>
-          <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-            A calmer place to capture ideas and <span className="text-primary">think with clarity.</span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
-            Notiva brings focused writing, flexible organization, and helpful AI into one clean workspace—so your ideas stay useful, not scattered.
-          </p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button asChild size="lg"><Link href="/register">Start writing free <ArrowRight /></Link></Button>
-            <Button asChild size="lg" variant="outline"><Link href="#product">See how it works</Link></Button>
+    <section className="border-b">
+      <PageContainer className="py-14 sm:py-20 lg:py-24">
+        <div className="grid items-center gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16">
+          <div className="max-w-xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">A clearer place for your notes</p>
+            <h1 className="mt-5 text-balance text-4xl font-semibold tracking-[-0.035em] sm:text-5xl lg:text-[3.5rem] lg:leading-[1.08]">
+              Keep ideas organized and writing in focus.
+            </h1>
+            <p className="mt-6 max-w-lg text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
+              Notiva brings writing, organization, history, and thoughtful AI assistance into one dependable workspace.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button asChild size="lg"><Link href="/register">Create your workspace <ArrowRight /></Link></Button>
+              <Button asChild size="lg" variant="outline"><Link href="#product">Explore the product</Link></Button>
+            </div>
+            <ul className="mt-8 space-y-2.5 text-sm text-muted-foreground">
+              {highlights.map((highlight) => (
+                <li key={highlight} className="flex items-center gap-2.5"><Check className="size-4 text-primary" aria-hidden="true" />{highlight}</li>
+              ))}
+            </ul>
           </div>
-          <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
-            <span className="inline-flex items-center gap-1.5"><CheckCircle2 className="size-4 text-success" />Focused notes</span>
-            <span className="inline-flex items-center gap-1.5"><CheckCircle2 className="size-4 text-success" />AI-assisted writing</span>
-            <span className="inline-flex items-center gap-1.5"><CheckCircle2 className="size-4 text-success" />Responsive workspace</span>
-          </div>
-        </div>
 
-        <div className="relative mx-auto mt-12 max-w-6xl sm:mt-16">
-          <div className="absolute -inset-3 -z-10 rounded-[1.5rem] bg-primary/10 blur-2xl" />
-          <div className="overflow-hidden rounded-xl border bg-surface p-1.5 shadow-overlay sm:rounded-2xl sm:p-2">
-            <Image src="/UX1.png" alt="Notiva notes dashboard showing organized note cards, filters, categories, and navigation" width={1586} height={992} priority sizes="(max-width: 1280px) 94vw, 1152px" className="h-auto w-full rounded-lg border" />
+          <div className="overflow-hidden rounded-xl border bg-surface p-1.5 shadow-card sm:p-2">
+            <Image src="/DS1.png" alt="Notiva notes dashboard with note cards, sidebar counts, categories, search, filters, and view controls" width={1853} height={919} priority sizes="(max-width: 1024px) 94vw, 760px" className="h-auto w-full rounded-lg border" />
           </div>
         </div>
       </PageContainer>

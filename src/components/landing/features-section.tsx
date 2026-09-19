@@ -1,6 +1,7 @@
 import { FolderKanban, History, Search, Sparkles, Star, WandSparkles, type LucideIcon } from "lucide-react";
 
 import { PageContainer } from "@/components/layout/page-container";
+import { cn } from "@/lib/utils";
 
 type Feature = { icon: LucideIcon; title: string; description: string };
 
@@ -18,15 +19,15 @@ export function FeaturesSection() {
     <section id="features" className="scroll-mt-20 py-16 sm:py-20 lg:py-24">
       <PageContainer className="py-0">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-primary">Everything in its place</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-primary">Everything in its place</p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Useful tools without the busywork</h2>
           <p className="mt-4 leading-7 text-muted-foreground">Notiva focuses on the workflows that make notes easier to write, organize, revisit, and understand.</p>
         </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map(({ icon: Icon, title, description }) => (
-            <article key={title} className="rounded-xl border bg-card p-5 shadow-card sm:p-6">
-              <span className="flex size-10 items-center justify-center rounded-lg bg-accent text-primary"><Icon className="size-5" /></span>
-              <h3 className="mt-5 text-lg font-semibold">{title}</h3>
+        <div className="mt-10 grid border-y sm:grid-cols-2 lg:grid-cols-3">
+          {features.map(({ icon: Icon, title, description }, index) => (
+            <article key={title} className={cn("py-6 sm:px-6", index > 0 && "border-t", index === 1 && "sm:border-t-0", index > 1 && "sm:border-t", index < 3 && "lg:border-t-0", index > 2 && "lg:border-t")}>
+              <Icon className="size-5 text-primary" aria-hidden="true" />
+              <h3 className="mt-4 text-base font-semibold">{title}</h3>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
             </article>
           ))}

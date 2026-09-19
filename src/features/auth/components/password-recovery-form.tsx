@@ -77,9 +77,7 @@ export function PasswordRecoveryForm() {
       <div className="space-y-5">
         <div className="rounded-xl border bg-surface-muted p-4">
           <div className="flex items-start gap-3">
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-accent text-primary">
-              <Mail className="size-4" aria-hidden="true" />
-            </span>
+            <Mail className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
             <div className="min-w-0">
               <p className="text-sm font-medium">Check your email</p>
               <p className="mt-1 text-sm leading-5 text-muted-foreground">{statusMessage}</p>

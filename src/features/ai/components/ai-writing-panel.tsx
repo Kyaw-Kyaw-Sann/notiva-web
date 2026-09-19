@@ -74,12 +74,12 @@ export function AiWritingPanel(props: AiWritingPanelProps) {
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-background">
-      <header className="flex items-start justify-between gap-3 border-b px-5 py-4">
+      <header className="flex items-start justify-between gap-3 border-b px-5 py-4 pr-14 xl:pr-5">
         <div><div className="flex items-center gap-2 font-semibold"><Sparkles className="size-4 text-primary" aria-hidden="true" />AI Writing</div><p className="mt-1 text-xs text-muted-foreground">Improve this note while keeping every change under your control.</p></div>
         <Button type="button" variant="ghost" size="icon" className="hidden size-8 xl:inline-flex" onClick={props.onClose} aria-label="Close AI Writing"><X aria-hidden="true" /></Button>
       </header>
 
-      <div className="notiva-scrollbar min-h-0 flex-1 overflow-y-auto p-5">
+      <div className="notiva-scrollbar min-h-0 flex-1 overflow-y-auto p-4 sm:p-5">
         <div className="mb-5 rounded-lg bg-primary/5 px-3 py-2 text-xs text-muted-foreground">
           {props.selection.hasSelection ? <><span className="font-medium text-primary">Selection targeted:</span> “{props.selection.text.slice(0, 90)}{props.selection.text.length > 90 ? "…" : ""}”</> : "No selection — actions use the full note."}
         </div>

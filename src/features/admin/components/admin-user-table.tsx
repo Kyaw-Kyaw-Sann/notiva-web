@@ -20,10 +20,10 @@ function UserAvatar({ user }: { user: AdminUser }) {
 
 export function AdminUserTable({ users }: { users: AdminUser[] }) {
   return (
-    <div className="notiva-scrollbar overflow-x-auto rounded-xl border bg-surface shadow-card">
+    <div className="notiva-scrollbar overflow-x-auto rounded-xl border bg-surface">
       <table className="w-full min-w-[58rem] border-collapse text-left text-sm">
         <caption className="sr-only">Notiva users and documented account metadata</caption>
-        <thead className="border-b bg-surface-muted/65 text-xs uppercase tracking-wide text-muted-foreground"><tr><th className="px-5 py-3 font-semibold" scope="col">User</th><th className="px-4 py-3 font-semibold" scope="col">Role</th><th className="px-4 py-3 font-semibold" scope="col">Plan</th><th className="px-4 py-3 font-semibold" scope="col">Account</th><th className="px-4 py-3 font-semibold" scope="col">Email</th><th className="px-5 py-3 font-semibold" scope="col">Created</th></tr></thead>
+        <thead className="border-b bg-surface-muted/50 text-xs text-muted-foreground"><tr><th className="px-5 py-3 font-semibold" scope="col">User</th><th className="px-4 py-3 font-semibold" scope="col">Role</th><th className="px-4 py-3 font-semibold" scope="col">Plan</th><th className="px-4 py-3 font-semibold" scope="col">Account</th><th className="px-4 py-3 font-semibold" scope="col">Email</th><th className="px-5 py-3 font-semibold" scope="col">Created</th></tr></thead>
         <tbody className="divide-y">
           {users.map((user) => (
             <tr key={user.id} className="hover:bg-surface-muted/35">

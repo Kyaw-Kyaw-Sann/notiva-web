@@ -1,12 +1,13 @@
 "use client";
 
-import { LoaderCircle, Pin, Star, Trash2 } from "lucide-react";
+import { LoaderCircle, MoreHorizontal, Pin, Star, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useDeleteNote, useSetNoteFavorite, useSetNotePinned } from "@/features/notes/hooks/use-notes";
 import { VersionHistoryDialog } from "@/features/notes/components/versions/version-history-dialog";
 import type { Note } from "@/features/notes/types/note.types";
@@ -53,7 +54,9 @@ export function NoteActions({ note, onVersionRestored, versionHistoryDisabled }:
   return (
     <>
       <div className="flex items-center gap-1" aria-label="Note actions">
-        <VersionHistoryDialog noteId={note.id} disabled={versionHistoryDisabled} onRestored={onVersionRestored} />
+        <div className="sm:hidden"><VersionHistoryDialog noteId={note.id} disabled={versionHistoryDisabled} onRestored={onVersionRestored} /></div>
+        <div className="hidden items-center gap-1 sm:flex">
+          <VersionHistoryDialog noteId={note.id} disabled={versionHistoryDisabled} onRestored={onVersionRestored} />
         <Button
           type="button"
           variant="ghost"
@@ -83,6 +86,17 @@ export function NoteActions({ note, onVersionRestored, versionHistoryDisabled }:
         <Button type="button" variant="ghost" size="icon" className="size-9 text-muted-foreground hover:text-destructive" onClick={() => setDeleteOpen(true)} aria-label="Move note to Recycle Bin" title="Move to Recycle Bin">
           <Trash2 />
         </Button>
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button type="button" variant="ghost" size="icon" className="size-9 sm:hidden" aria-label="More note actions"><MoreHorizontal aria-hidden="true" /></Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-52 sm:hidden">
+            <DropdownMenuItem disabled={setPinned.isPending} onSelect={() => void handlePinned()}><Pin className={cn(note.pinned && "fill-current text-primary")} />{note.pinned ? "Unpin note" : "Pin note"}</DropdownMenuItem>
+            <DropdownMenuItem disabled={setFavorite.isPending} onSelect={() => void handleFavorite()}><Star className={cn(note.favorite && "fill-current text-warning")} />{note.favorite ? "Remove favorite" : "Add to favorites"}</DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive focus:text-destructive" onSelect={() => setDeleteOpen(true)}><Trash2 />Move to Recycle Bin</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <Dialog open={deleteOpen} onOpenChange={(open) => { setDeleteError(null); setDeleteOpen(open); }}>

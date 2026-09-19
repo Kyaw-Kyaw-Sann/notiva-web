@@ -71,7 +71,7 @@ body { background: var(--background); color: var(--foreground); }
 }
 
 .notiva-editor-content {
-  min-height: 50vh;
+  min-height: 58vh;
   padding: 1.5rem 2rem;
   color: var(--foreground);
   font-size: 1rem;

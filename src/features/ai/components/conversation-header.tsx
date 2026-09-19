@@ -1,6 +1,6 @@
 "use client";
 
-import { LoaderCircle, Pencil, Trash2 } from "lucide-react";
+import { ArrowLeft, LoaderCircle, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -12,7 +12,7 @@ import { useDeleteAiConversation, useUpdateAiConversation } from "@/features/ai/
 import type { AiConversation } from "@/features/ai/types/ai.types";
 import { normalizeApiError } from "@/lib/api";
 
-export function ConversationHeader({ conversation, onDeleted }: { conversation: AiConversation; onDeleted: () => void }) {
+export function ConversationHeader({ conversation, onBack, onDeleted }: { conversation: AiConversation; onBack?: () => void; onDeleted: () => void }) {
   const [renameOpen, setRenameOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [title, setTitle] = useState(conversation.title);
@@ -48,7 +48,10 @@ export function ConversationHeader({ conversation, onDeleted }: { conversation: 
   return (
     <>
       <header className="flex items-center justify-between gap-3 border-b px-4 py-3">
-        <div className="min-w-0"><h2 className="truncate text-sm font-semibold">{conversation.title}</h2><p className="truncate text-xs text-muted-foreground">{conversation.note?.title ?? "Across all notes"}</p></div>
+        <div className="flex min-w-0 items-center gap-2">
+          {onBack && <Button type="button" variant="ghost" size="icon" className="size-10 shrink-0 md:hidden" onClick={onBack} aria-label="Back to conversations"><ArrowLeft aria-hidden="true" /></Button>}
+          <div className="min-w-0"><h2 className="truncate text-sm font-semibold">{conversation.title}</h2><p className="truncate text-xs text-muted-foreground">{conversation.note?.title ?? "Across all notes"}</p></div>
+        </div>
         <div className="flex shrink-0 items-center gap-1">
           <Button type="button" variant="ghost" size="icon" className="size-8" onClick={() => { setTitle(conversation.title); setError(null); setRenameOpen(true); }} aria-label="Rename conversation"><Pencil aria-hidden="true" /></Button>
           <Button type="button" variant="ghost" size="icon" className="size-8 text-destructive" onClick={() => { setError(null); setDeleteOpen(true); }} aria-label="Delete conversation"><Trash2 aria-hidden="true" /></Button>

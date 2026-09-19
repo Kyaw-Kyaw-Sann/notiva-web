@@ -63,8 +63,8 @@ export function ResetPasswordForm() {
 
   if (recovery === undefined) {
     return (
-      <div className="rounded-xl border bg-surface p-5 text-center" aria-live="polite" aria-busy="true">
-        <LoaderCircle className="mx-auto size-6 animate-spin text-primary" aria-hidden="true" />
+      <div className="rounded-xl border bg-surface p-5" aria-live="polite" aria-busy="true">
+        <LoaderCircle className="size-5 animate-spin text-primary" aria-hidden="true" />
         <p className="mt-3 text-sm text-muted-foreground">Loading your verified request…</p>
       </div>
     );
@@ -72,8 +72,8 @@ export function ResetPasswordForm() {
 
   if (!recovery) {
     return (
-      <div className="rounded-xl border border-destructive/25 bg-destructive/5 p-5 text-center" role="alert">
-        <AlertCircle className="mx-auto size-7 text-destructive" aria-hidden="true" />
+      <div className="rounded-xl border border-destructive/25 bg-destructive/5 p-5" role="alert">
+        <AlertCircle className="size-6 text-destructive" aria-hidden="true" />
         <h2 className="mt-3 font-semibold">Recovery session unavailable</h2>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">Request and verify a new recovery code before setting a password.</p>
         <Button asChild className="mt-5 h-11 w-full">
@@ -85,10 +85,8 @@ export function ResetPasswordForm() {
 
   if (successMessage) {
     return (
-      <div className="rounded-xl border border-success/25 bg-success/5 p-5 text-center" role="status">
-        <span className="mx-auto flex size-12 items-center justify-center rounded-full bg-success/15 text-success">
-          <CheckCircle2 className="size-6" aria-hidden="true" />
-        </span>
+      <div className="rounded-xl border border-success/25 bg-success/5 p-5" role="status">
+        <CheckCircle2 className="size-6 text-success" aria-hidden="true" />
         <h2 className="mt-4 text-lg font-semibold">Password updated</h2>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">{successMessage}</p>
         <Button asChild className="mt-5 h-11 w-full">

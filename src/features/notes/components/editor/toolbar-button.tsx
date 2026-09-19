@@ -7,19 +7,20 @@ import { cn } from "@/lib/utils";
 
 type ToolbarButtonProps = {
   children: ReactNode;
+  className?: string;
   disabled?: boolean;
   isActive?: boolean;
   label: string;
   onClick: () => void;
 };
 
-export function ToolbarButton({ children, disabled, isActive, label, onClick }: ToolbarButtonProps) {
+export function ToolbarButton({ children, className, disabled, isActive, label, onClick }: ToolbarButtonProps) {
   return (
     <Button
       type="button"
       variant={isActive ? "secondary" : "ghost"}
       size="icon"
-      className={cn("size-9 shrink-0", isActive && "text-primary")}
+      className={cn("size-9 shrink-0", isActive && "text-primary", className)}
       disabled={disabled}
       onClick={onClick}
       aria-label={label}
